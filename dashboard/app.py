@@ -48,33 +48,33 @@ st.markdown(
         --mika-card: #FFFFFF;
         --mika-card-hover: #F7F9FA;
 
-        --mika-border: #D4DADF;
+        --mika-border: #C7CED4;
 
         --mika-text: #17212B;
-        --mika-secondary: #46515C;
-        --mika-muted: #68737D;
+        --mika-secondary: #42505C;
+        --mika-muted: #66737E;
 
-        --mika-blue: #1769AA;
-        --mika-blue-dark: #0D4F82;
-        --mika-blue-soft: #E6F0F8;
+        --mika-blue: #0B5E75;
+        --mika-blue-dark: #08485A;
+        --mika-blue-soft: #D9EDF3;
 
-        --mika-green: #217346;
-        --mika-green-dark: #185C37;
-        --mika-green-soft: #E5F3EA;
+        --mika-green: #176B4D;
+        --mika-green-dark: #104A36;
+        --mika-green-soft: #DDEFE7;
 
-        --mika-amber: #9A6700;
-        --mika-amber-dark: #765000;
-        --mika-amber-soft: #FFF4D6;
+        --mika-amber: #8A5A00;
+        --mika-amber-dark: #694400;
+        --mika-amber-soft: #F7EBD0;
 
-        --mika-red: #B42318;
-        --mika-red-dark: #8E1B12;
-        --mika-red-soft: #FDECEA;
+        --mika-red: #8B2E2E;
+        --mika-red-dark: #692020;
+        --mika-red-soft: #F5E0E0;
 
-        --mika-purple: #6941C6;
-        --mika-purple-soft: #F0EAFF;
+        --mika-purple: #5B4B7A;
+        --mika-purple-soft: #ECE7F5;
 
         --mika-cyan: #087E8B;
-        --mika-cyan-soft: #E5F7F8;
+        --mika-cyan-soft: #E1F3F5;
     }
 
 
@@ -83,20 +83,20 @@ st.markdown(
        ======================================================== */
 
     .stApp {
-        background: var(--mika-bg);
+        background: #FFFFFF;
         color: var(--mika-text);
     }
 
     [data-testid="stAppViewContainer"] {
-        background: var(--mika-bg);
+        background: #FFFFFF;
     }
 
     [data-testid="stMain"] {
-        background: var(--mika-bg);
+        background: #FFFFFF;
     }
 
     [data-testid="stHeader"] {
-        background: rgba(255, 255, 255, 0.97);
+        background: #FFFFFF;
         border-bottom: 1px solid var(--mika-border);
     }
 
@@ -173,8 +173,8 @@ st.markdown(
 
     .stButton > button:hover,
     .stLinkButton > a:hover {
-        background: var(--mika-card-hover);
-        color: var(--mika-text);
+        background: var(--mika-blue-soft);
+        color: var(--mika-blue-dark);
         border-color: var(--mika-blue);
     }
 
@@ -328,49 +328,16 @@ st.markdown(
 
 
     /* ========================================================
-       MIKA BRAND HEADER
+       SECTION LABELS
        ======================================================== */
 
-    .mika-brand {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-
-        padding: 10px 4px 14px 4px;
-        margin-bottom: 8px;
-    }
-
-    .mika-brand-mark {
-        width: 42px;
-        height: 42px;
-
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        border-radius: 9px;
-
-        background: var(--mika-blue);
-        color: #FFFFFF;
-
-        font-size: 19px;
-        font-weight: 800;
-
-        box-shadow:
-            0 2px 5px rgba(23, 105, 170, 0.25);
-    }
-
-    .mika-brand-name {
-        font-size: 1.2rem;
-        font-weight: 800;
-        color: var(--mika-text);
-        line-height: 1.1;
-    }
-
-    .mika-brand-subtitle {
+    .sidebar-phase {
+        color: var(--mika-blue-dark);
         font-size: 0.72rem;
-        color: var(--mika-secondary);
-        margin-top: 3px;
+        font-weight: 800;
+        letter-spacing: 0.12em;
+        margin-top: 17px;
+        margin-bottom: 7px;
     }
 
 
@@ -440,62 +407,6 @@ st.markdown(
 
 
     /* ========================================================
-       SECTION BAR
-       ======================================================== */
-
-    .mika-section {
-        background: var(--mika-blue-soft);
-
-        border: 1px solid #BFD5E5;
-        border-left: 5px solid var(--mika-blue);
-
-        border-radius: 7px;
-
-        padding: 10px 14px;
-
-        margin: 12px 0 18px 0;
-    }
-
-
-    /* ========================================================
-       SIDEBAR SECTION LABEL
-       ======================================================== */
-
-    .sidebar-phase {
-        color: var(--mika-blue-dark);
-
-        font-size: 0.72rem;
-        font-weight: 800;
-
-        letter-spacing: 0.12em;
-
-        margin-top: 17px;
-        margin-bottom: 7px;
-    }
-
-
-    /* ========================================================
-       BADGES
-       ======================================================== */
-
-    .badge {
-        display: inline-block;
-
-        padding: 4px 8px;
-
-        border-radius: 5px;
-
-        font-size: 0.72rem;
-        font-weight: 700;
-
-        border: 1px solid var(--mika-border);
-
-        background: #FFFFFF;
-        color: var(--mika-secondary);
-    }
-
-
-    /* ========================================================
        DATABASE STATUS
        ======================================================== */
 
@@ -533,7 +444,7 @@ st.markdown(
 
 
     /* ========================================================
-       DATABASE ARCHITECTURE
+       DATABASE PATH
        ======================================================== */
 
     .db-path-box {
@@ -576,10 +487,6 @@ st.markdown(
             min-height: auto;
         }
 
-        .mika-brand {
-            padding-bottom: 8px;
-        }
-
     }
 
     </style>
@@ -612,13 +519,11 @@ def get_phase3_composer():
     """
 
     try:
-
         from phase3_answer_composer import compose_answer
 
         return compose_answer, None
 
     except Exception as exc:
-
         return None, exc
 
 
@@ -631,11 +536,10 @@ def get_connection():
     """
     Open the real project SQLite database.
 
-    The database is read-only from the dashboard perspective.
+    The dashboard only performs read operations.
     """
 
     if not database_available():
-
         raise FileNotFoundError(
             f"MIKA CI database not found: {DB_PATH}"
         )
@@ -643,6 +547,7 @@ def get_connection():
     connection = sqlite3.connect(
         str(DB_PATH),
         check_same_thread=False,
+        timeout=30,
     )
 
     return connection
@@ -654,42 +559,30 @@ def get_connection():
 
 def refresh_database():
     """
-    Refresh the dashboard's SQLite connection and Streamlit caches.
+    Refresh the dashboard SQLite connection and caches.
 
-    Does NOT modify SQLite records or schema.
+    Does not modify SQLite records or schema.
     """
 
     try:
-
         connection = get_connection()
         connection.close()
-
     except Exception:
-
         pass
 
     try:
-
         get_connection.clear()
-
     except Exception:
-
         pass
 
     try:
-
         st.cache_data.clear()
-
     except Exception:
-
         pass
 
     try:
-
         st.cache_resource.clear()
-
     except Exception:
-
         pass
 
 
@@ -714,14 +607,10 @@ def query(sql, params=()):
 
 def scalar(sql, params=(), default=0):
     """
-    Execute a scalar query.
-
-    Missing tables or unavailable database return the
-    supplied default rather than crashing the dashboard.
+    Execute a scalar query safely.
     """
 
     try:
-
         connection = get_connection()
 
         row = connection.execute(
@@ -730,36 +619,29 @@ def scalar(sql, params=(), default=0):
         ).fetchone()
 
         if row and row[0] is not None:
-
             return row[0]
 
         return default
 
     except Exception:
-
         return default
 
 
 def safe_query(sql, params=(), default=None):
     """
     Safe dashboard query.
-
-    Optional dashboard sections return an empty result
-    instead of terminating the entire Streamlit application.
     """
 
     if default is None:
         default = []
 
     try:
-
         return query(
             sql,
             params,
         )
 
     except Exception:
-
         return default
 
 
@@ -812,12 +694,9 @@ def get_current_week():
 TODAY = date.today().isoformat()
 
 if database_available():
-
     WEEK = get_current_week()
     LATEST_RUN = get_latest_run()
-
 else:
-
     WEEK = "N/A"
     LATEST_RUN = None
 
@@ -1010,39 +889,21 @@ def navigate(page):
 
 
 # ============================================================
-# SIDEBAR BRANDING
+# SIDEBAR
 # ============================================================
 
-st.sidebar.markdown(
-    """
-    <div class="mika-brand">
+# Clean text only.
+# No raw HTML branding is used here.
 
-        <div class="mika-brand-mark">
-            M
-        </div>
-
-        <div>
-            <div class="mika-brand-name">
-                MIKA CI
-            </div>
-
-            <div class="mika-brand-subtitle">
-                Competitive Intelligence
-            </div>
-        </div>
-
-    </div>
-    """,
-    unsafe_allow_html=True,
-)
+st.sidebar.title("MIKA CI")
 
 st.sidebar.caption(
-    "MIKA / Ideal Appliances"
+    "Competitive Intelligence"
 )
 
 
 # ============================================================
-# HOME
+# HOME NAVIGATION
 # ============================================================
 
 if st.sidebar.button(
@@ -1050,7 +911,6 @@ if st.sidebar.button(
     use_container_width=True,
     key="nav_home",
 ):
-
     navigate("home")
 
 
@@ -1059,8 +919,7 @@ if st.sidebar.button(
 # ============================================================
 
 st.sidebar.markdown(
-    '<div class="sidebar-phase">PHASE 1</div>',
-    unsafe_allow_html=True,
+    "### PHASE 1"
 )
 
 if st.sidebar.button(
@@ -1068,7 +927,6 @@ if st.sidebar.button(
     use_container_width=True,
     key="nav_phase1",
 ):
-
     navigate("phase1")
 
 
@@ -1077,7 +935,6 @@ if st.sidebar.button(
     use_container_width=True,
     key="nav_sources",
 ):
-
     navigate("sources")
 
 
@@ -1086,8 +943,7 @@ if st.sidebar.button(
 # ============================================================
 
 st.sidebar.markdown(
-    '<div class="sidebar-phase">PHASE 2</div>',
-    unsafe_allow_html=True,
+    "### PHASE 2"
 )
 
 if st.sidebar.button(
@@ -1095,11 +951,7 @@ if st.sidebar.button(
     use_container_width=True,
     key="nav_social",
 ):
-
-    st.session_state.phase2_module = (
-        "Social Intelligence"
-    )
-
+    st.session_state.phase2_module = "Social Intelligence"
     navigate("phase2")
 
 
@@ -1108,11 +960,7 @@ if st.sidebar.button(
     use_container_width=True,
     key="nav_campaigns",
 ):
-
-    st.session_state.phase2_module = (
-        "Campaign Intelligence"
-    )
-
+    st.session_state.phase2_module = "Campaign Intelligence"
     navigate("phase2")
 
 
@@ -1121,11 +969,7 @@ if st.sidebar.button(
     use_container_width=True,
     key="nav_products",
 ):
-
-    st.session_state.phase2_module = (
-        "Product Intelligence"
-    )
-
+    st.session_state.phase2_module = "Product Intelligence"
     navigate("phase2")
 
 
@@ -1134,11 +978,7 @@ if st.sidebar.button(
     use_container_width=True,
     key="nav_launches",
 ):
-
-    st.session_state.phase2_module = (
-        "Product Launches"
-    )
-
+    st.session_state.phase2_module = "Product Launches"
     navigate("phase2")
 
 
@@ -1147,11 +987,7 @@ if st.sidebar.button(
     use_container_width=True,
     key="nav_trends",
 ):
-
-    st.session_state.phase2_module = (
-        "Market Trends"
-    )
-
+    st.session_state.phase2_module = "Market Trends"
     navigate("phase2")
 
 
@@ -1160,11 +996,7 @@ if st.sidebar.button(
     use_container_width=True,
     key="nav_comparison",
 ):
-
-    st.session_state.phase2_module = (
-        "Competitor Comparison"
-    )
-
+    st.session_state.phase2_module = "Competitor Comparison"
     navigate("phase2")
 
 
@@ -1173,11 +1005,7 @@ if st.sidebar.button(
     use_container_width=True,
     key="nav_alerts",
 ):
-
-    st.session_state.phase2_module = (
-        "Strategic Alerts"
-    )
-
+    st.session_state.phase2_module = "Strategic Alerts"
     navigate("phase2")
 
 
@@ -1186,8 +1014,7 @@ if st.sidebar.button(
 # ============================================================
 
 st.sidebar.markdown(
-    '<div class="sidebar-phase">PHASE 3</div>',
-    unsafe_allow_html=True,
+    "### PHASE 3"
 )
 
 if st.sidebar.button(
@@ -1195,7 +1022,6 @@ if st.sidebar.button(
     use_container_width=True,
     key="nav_phase3",
 ):
-
     navigate("phase3")
 
 
@@ -1204,8 +1030,7 @@ if st.sidebar.button(
 # ============================================================
 
 st.sidebar.markdown(
-    '<div class="sidebar-phase">SYSTEM</div>',
-    unsafe_allow_html=True,
+    "### SYSTEM"
 )
 
 if st.sidebar.button(
@@ -1213,7 +1038,6 @@ if st.sidebar.button(
     use_container_width=True,
     key="nav_reports",
 ):
-
     navigate("reports")
 
 
@@ -1222,7 +1046,6 @@ if st.sidebar.button(
     use_container_width=True,
     key="nav_database",
 ):
-
     navigate("database")
 
 
@@ -1259,16 +1082,14 @@ if st.session_state.last_refresh > 0:
 
 if database_available():
 
-    st.sidebar.markdown(
-        '<span class="db-connected">● DATABASE CONNECTED</span>',
-        unsafe_allow_html=True,
+    st.sidebar.success(
+        "● DATABASE CONNECTED"
     )
 
 else:
 
-    st.sidebar.markdown(
-        '<span class="db-missing">● DATABASE NOT FOUND</span>',
-        unsafe_allow_html=True,
+    st.sidebar.error(
+        "● DATABASE NOT FOUND"
     )
 
 
@@ -1289,27 +1110,15 @@ st.sidebar.caption(
 # MAIN HEADER
 # ============================================================
 
-st.markdown(
-    """
-    <div class="mika-brand">
+# Clean Streamlit header.
+# No raw HTML.
 
-        <div class="mika-brand-mark">
-            M
-        </div>
+st.title(
+    "MIKA Competitive Intelligence"
+)
 
-        <div>
-            <div class="mika-brand-name">
-                MIKA Competitive Intelligence
-            </div>
-
-            <div class="mika-brand-subtitle">
-                Live market intelligence for MIKA / Ideal Appliances
-            </div>
-        </div>
-
-    </div>
-    """,
-    unsafe_allow_html=True,
+st.caption(
+    "Live market intelligence for MIKA / Ideal Appliances"
 )
 
 
@@ -1390,7 +1199,6 @@ if st.session_state.page == "home":
             key="home_phase1",
             use_container_width=True,
         ):
-
             navigate("phase1")
 
 
@@ -1426,7 +1234,6 @@ if st.session_state.page == "home":
             key="home_phase2",
             use_container_width=True,
         ):
-
             navigate("phase2")
 
 
@@ -1461,7 +1268,6 @@ if st.session_state.page == "home":
             key="home_phase3",
             use_container_width=True,
         ):
-
             navigate("phase3")
 
 
@@ -1479,28 +1285,24 @@ if st.session_state.page == "home":
     c1, c2, c3, c4 = st.columns(4)
 
     with c1:
-
         st.metric(
             "Competitors",
             COMPETITOR_COUNT,
         )
 
     with c2:
-
         st.metric(
             "Price Observations",
             PRICE_OBSERVATION_COUNT,
         )
 
     with c3:
-
         st.metric(
             "Active Campaigns",
             ACTIVE_CAMPAIGN_COUNT,
         )
 
     with c4:
-
         st.metric(
             "Strategic Alerts",
             STRATEGIC_ALERT_COUNT,
@@ -1510,28 +1312,24 @@ if st.session_state.page == "home":
     c1, c2, c3, c4 = st.columns(4)
 
     with c1:
-
         st.metric(
             "Social Evidence",
             SOCIAL_OBSERVATION_COUNT,
         )
 
     with c2:
-
         st.metric(
             "Market Trends",
             MARKET_TREND_COUNT,
         )
 
     with c3:
-
         st.metric(
             "Comparisons",
             COMPARISON_COUNT,
         )
 
     with c4:
-
         st.metric(
             "Tracked Catalogue",
             CATALOGUE_PRODUCT_COUNT,
@@ -1632,7 +1430,6 @@ elif st.session_state.page == "sources":
 
     st.divider()
 
-
     source_count = scalar(
         """
         SELECT COUNT(DISTINCT source_url)
@@ -1671,7 +1468,6 @@ elif st.session_state.page == "sources":
         """
     )
 
-
     c1, c2, c3, c4 = st.columns(4)
 
     with c1:
@@ -1697,7 +1493,6 @@ elif st.session_state.page == "sources":
             "High Confidence",
             high_confidence_count,
         )
-
 
     st.divider()
 
@@ -1737,7 +1532,6 @@ elif st.session_state.page == "sources":
         st.info(
             "No source data available."
         )
-
 
     st.divider()
 
@@ -1831,7 +1625,6 @@ elif st.session_state.page == "sources":
             "No source URLs are currently stored."
         )
 
-
     st.divider()
 
     st.subheader(
@@ -1892,14 +1685,12 @@ elif st.session_state.page == "sources":
             d1, d2, d3 = st.columns(3)
 
             with d1:
-
                 st.metric(
                     "Findings",
                     len(source_detail),
                 )
 
             with d2:
-
                 st.metric(
                     "Brands",
                     len(
@@ -2066,7 +1857,6 @@ elif st.session_state.page == "phase1":
             NEWS_COUNT,
         )
 
-
     st.divider()
 
     st.subheader(
@@ -2111,7 +1901,6 @@ elif st.session_state.page == "phase1":
         st.info(
             "No current-week findings."
         )
-
 
     st.divider()
 
@@ -2170,7 +1959,6 @@ elif st.session_state.page == "phase1":
         st.info(
             "No price observations available."
         )
-
 
     st.divider()
 
@@ -2231,7 +2019,6 @@ elif st.session_state.page == "phase1":
         st.info(
             "No promotion observations available."
         )
-
 
     st.divider()
 
@@ -2363,7 +2150,6 @@ elif st.session_state.page == "phase2":
 
         st.divider()
 
-
         verified_social_sources = scalar(
             """
             SELECT COUNT(*)
@@ -2390,7 +2176,6 @@ elif st.session_state.page == "phase2":
             WHERE finding_type = 'social'
             """
         )
-
 
         c1, c2, c3, c4 = st.columns(4)
 
@@ -2421,7 +2206,6 @@ elif st.session_state.page == "phase2":
                 "Active Sources",
                 total_social_sources,
             )
-
 
         st.divider()
 
@@ -2481,7 +2265,6 @@ elif st.session_state.page == "phase2":
                 "No social sources are registered."
             )
 
-
         st.divider()
 
         st.subheader(
@@ -2540,7 +2323,6 @@ elif st.session_state.page == "phase2":
             st.info(
                 "No validated social observations have been collected."
             )
-
 
         st.divider()
 
@@ -2654,7 +2436,6 @@ elif st.session_state.page == "phase2":
                 "Upcoming",
                 UPCOMING_CAMPAIGN_COUNT,
             )
-
 
         st.divider()
 
@@ -2799,7 +2580,6 @@ elif st.session_state.page == "phase2":
                 COMPETITOR_COUNT,
             )
 
-
         st.divider()
 
         st.subheader(
@@ -2851,7 +2631,6 @@ elif st.session_state.page == "phase2":
             st.info(
                 "No price coverage records are available."
             )
-
 
         st.divider()
 
@@ -2934,7 +2713,6 @@ elif st.session_state.page == "phase2":
             "a product launch."
         )
 
-
         catalogue_rows = []
 
         catalogue_definitions = [
@@ -2981,7 +2759,6 @@ elif st.session_state.page == "phase2":
 
                 continue
 
-
         if catalogue_rows:
 
             st.dataframe(
@@ -2989,7 +2766,6 @@ elif st.session_state.page == "phase2":
                 use_container_width=True,
                 hide_index=True,
             )
-
 
         st.divider()
 
@@ -3059,7 +2835,6 @@ elif st.session_state.page == "phase2":
             """
         )
 
-
         c1, c2, c3 = st.columns(3)
 
         with c1:
@@ -3082,7 +2857,6 @@ elif st.session_state.page == "phase2":
                 "Concurrent Signals",
                 concurrent_signals,
             )
-
 
         st.divider()
 
@@ -3162,7 +2936,6 @@ elif st.session_state.page == "phase2":
             "competitor ratings."
         )
 
-
         competitor_options = [
             row[0]
             for row in safe_query(
@@ -3175,7 +2948,6 @@ elif st.session_state.page == "phase2":
             )
         ]
 
-
         selected_competitor = st.selectbox(
             "Filter by competitor",
             [
@@ -3183,7 +2955,6 @@ elif st.session_state.page == "phase2":
             ]
             + competitor_options,
         )
-
 
         if selected_competitor == "All competitors":
 
@@ -3236,12 +3007,10 @@ elif st.session_state.page == "phase2":
                 (selected_competitor,),
             )
 
-
         st.metric(
             "Comparison Records",
             len(rows),
         )
-
 
         if rows:
 
@@ -3313,7 +3082,6 @@ elif st.session_state.page == "phase2":
             """
         )
 
-
         c1, c2, c3 = st.columns(3)
 
         with c1:
@@ -3336,7 +3104,6 @@ elif st.session_state.page == "phase2":
                 "Medium",
                 medium_alerts,
             )
-
 
         st.divider()
 
@@ -3370,7 +3137,6 @@ elif st.session_state.page == "phase2":
                 created_at DESC
             """
         )
-
 
         if rows:
 
@@ -3446,7 +3212,6 @@ elif st.session_state.page == "phase3":
         key="phase3_question",
     )
 
-
     if st.button(
         "Ask MIKA CI",
         type="primary",
@@ -3498,7 +3263,6 @@ elif st.session_state.page == "phase3":
 
                         result = None
 
-
             if result:
 
                 st.divider()
@@ -3510,7 +3274,6 @@ elif st.session_state.page == "phase3":
                 st.write(
                     result.answer
                 )
-
 
                 st.divider()
 
@@ -3552,7 +3315,6 @@ elif st.session_state.page == "phase3":
                         "No supporting evidence was returned."
                     )
 
-
                 if result.limitations:
 
                     st.divider()
@@ -3566,7 +3328,6 @@ elif st.session_state.page == "phase3":
                         st.markdown(
                             f"- {limitation}"
                         )
-
 
                 st.divider()
 
@@ -3601,12 +3362,10 @@ elif st.session_state.page == "reports":
 
     st.divider()
 
-
     reports = sorted(
         REPORTS_DIR.glob("MIKA_CI_*.md"),
         reverse=True,
     )
-
 
     if reports:
 
@@ -3614,7 +3373,6 @@ elif st.session_state.page == "reports":
             "Reports Available",
             len(reports),
         )
-
 
         for report in reports:
 
@@ -3674,22 +3432,17 @@ elif st.session_state.page == "database":
 
     if not database_available():
 
-        st.markdown(
-            '<span class="db-missing">● DATABASE NOT FOUND</span>',
-            unsafe_allow_html=True,
-        )
-
         st.error(
-            f"SQLite database was not found at:"
+            "DATABASE NOT FOUND"
         )
 
-        st.markdown(
-            f"""
-            <div class="db-path-box">
-            {DB_PATH}
-            </div>
-            """,
-            unsafe_allow_html=True,
+        st.write(
+            "SQLite database was not found at:"
+        )
+
+        st.code(
+            str(DB_PATH),
+            language="text",
         )
 
         st.info(
@@ -3722,24 +3475,17 @@ elif st.session_state.page == "database":
                     """
                 ).fetchall()
 
-
             integrity_status = (
                 integrity[0]
                 if integrity
                 else "unknown"
             )
 
-
-            st.markdown(
-                '<span class="db-connected">● DATABASE CONNECTED</span>',
-                unsafe_allow_html=True,
+            st.success(
+                "DATABASE CONNECTED"
             )
 
-            st.write("")
-
-
             c1, c2, c3, c4 = st.columns(4)
-
 
             with c1:
 
@@ -3748,14 +3494,12 @@ elif st.session_state.page == "database":
                     "CONNECTED",
                 )
 
-
             with c2:
 
                 st.metric(
                     "Tables",
                     len(table_rows),
                 )
-
 
             with c3:
 
@@ -3776,7 +3520,6 @@ elif st.session_state.page == "database":
                     size_text,
                 )
 
-
             with c4:
 
                 st.metric(
@@ -3786,20 +3529,14 @@ elif st.session_state.page == "database":
                     ).upper(),
                 )
 
-
             st.caption(
-                "Actual SQLite file:"
+                "Actual SQLite file"
             )
 
-            st.markdown(
-                f"""
-                <div class="db-path-box">
-                {DB_PATH}
-                </div>
-                """,
-                unsafe_allow_html=True,
+            st.code(
+                str(DB_PATH),
+                language="text",
             )
-
 
         except Exception as exc:
 
@@ -3824,7 +3561,6 @@ elif st.session_state.page == "database":
         "sqlite_master and PRAGMA table_info()."
     )
 
-
     if database_available():
 
         try:
@@ -3844,9 +3580,7 @@ elif st.session_state.page == "database":
                     """
                 ).fetchall()
 
-
                 schema_overview = []
-
 
                 for table_row in tables:
 
@@ -3860,7 +3594,6 @@ elif st.session_state.page == "database":
                         f'SELECT COUNT(*) FROM "{table_name}"'
                     ).fetchone()[0]
 
-
                     schema_overview.append(
                         {
                             "Table": table_name,
@@ -3868,7 +3601,6 @@ elif st.session_state.page == "database":
                             "Records": row_count,
                         }
                     )
-
 
             if schema_overview:
 
@@ -3883,7 +3615,6 @@ elif st.session_state.page == "database":
                 st.info(
                     "No application tables were found."
                 )
-
 
         except Exception as exc:
 
@@ -3915,7 +3646,6 @@ elif st.session_state.page == "database":
         "columns and real stored records."
     )
 
-
     if database_available():
 
         try:
@@ -3938,7 +3668,6 @@ elif st.session_state.page == "database":
                     ).fetchall()
                 ]
 
-
             if table_names:
 
                 selected_table = st.selectbox(
@@ -3947,11 +3676,9 @@ elif st.session_state.page == "database":
                     key="database_table_selector",
                 )
 
-
                 st.markdown(
                     f"### `{selected_table}`"
                 )
-
 
                 with sqlite3.connect(
                     str(DB_PATH)
@@ -3965,12 +3692,10 @@ elif st.session_state.page == "database":
                         f'SELECT COUNT(*) FROM "{selected_table}"'
                     ).fetchone()[0]
 
-
                 st.metric(
                     "Records in selected table",
                     selected_count,
                 )
-
 
                 st.divider()
 
@@ -3978,9 +3703,7 @@ elif st.session_state.page == "database":
                     "**Table Schema**"
                 )
 
-
                 column_data = []
-
 
                 for column in columns:
 
@@ -4009,7 +3732,6 @@ elif st.session_state.page == "database":
                         }
                     )
 
-
                 if column_data:
 
                     st.dataframe(
@@ -4024,13 +3746,11 @@ elif st.session_state.page == "database":
                         "No columns were returned for this table."
                     )
 
-
                 st.divider()
 
                 st.markdown(
                     "**Actual Database Records**"
                 )
-
 
                 with sqlite3.connect(
                     str(DB_PATH)
@@ -4051,7 +3771,6 @@ elif st.session_state.page == "database":
                         for description in cursor.description
                     ]
 
-
                 if records:
 
                     record_data = [
@@ -4064,13 +3783,11 @@ elif st.session_state.page == "database":
                         for record in records
                     ]
 
-
                     st.dataframe(
                         record_data,
                         use_container_width=True,
                         hide_index=True,
                     )
-
 
                     if selected_count > 200:
 
@@ -4085,13 +3802,11 @@ elif st.session_state.page == "database":
                         "This table currently contains no records."
                     )
 
-
             else:
 
                 st.info(
                     "No application tables are available."
                 )
-
 
         except Exception as exc:
 
@@ -4123,7 +3838,6 @@ elif st.session_state.page == "database":
         "No table names are hard-coded here."
     )
 
-
     if database_available():
 
         try:
@@ -4146,16 +3860,13 @@ elif st.session_state.page == "database":
                     ).fetchall()
                 ]
 
-
             if actual_tables:
 
                 architecture_text = (
-                    "**MIKA Competitive Intelligence**\n\n"
-                    "```text\n"
+                    "MIKA Competitive Intelligence\n\n"
                     "SQLite Project Database\n"
                     "│\n"
                 )
-
 
                 for index, table_name in enumerate(
                     actual_tables
@@ -4176,16 +3887,14 @@ elif st.session_state.page == "database":
                         f"{connector} {table_name}\n"
                     )
 
-
-                architecture_text += (
-                    "```\n\n"
-                    "The architecture above is generated from "
-                    "the actual SQLite tables currently present."
+                st.code(
+                    architecture_text,
+                    language="text",
                 )
 
-
-                st.markdown(
-                    architecture_text
+                st.caption(
+                    "The architecture above is generated from "
+                    "the actual SQLite tables currently present."
                 )
 
             else:
@@ -4193,7 +3902,6 @@ elif st.session_state.page == "database":
                 st.info(
                     "No application tables exist in the database."
                 )
-
 
         except Exception as exc:
 
@@ -4217,7 +3925,7 @@ elif st.session_state.page == "database":
     # ========================================================
 
     st.info(
-        "The dashboard opens the project SQLite database in "
-        "read-only inspection mode. Schema & Database does not "
+        "The dashboard opens the project SQLite database for "
+        "read-only inspection. Schema & Database does not "
         "create, delete, rename or modify database records."
     )
