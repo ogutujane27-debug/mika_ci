@@ -34,7 +34,7 @@ st.set_page_config(
 
 
 # ============================================================
-# MIKA CI — SOFT GREY / CREAM THEME
+# MIKA CI — WHITE / HIGH VISIBILITY THEME
 # ============================================================
 
 st.markdown(
@@ -42,33 +42,45 @@ st.markdown(
     <style>
 
     :root {
-        --mika-bg: #E7E4DE;
-        --mika-sidebar: #D9D6D0;
+        --mika-bg: #FFFFFF;
+        --mika-sidebar: #F3F5F7;
 
-        --mika-card: #F4F1EB;
-        --mika-card-hover: #ECE9E3;
+        --mika-card: #FFFFFF;
+        --mika-card-hover: #F7F9FA;
 
-        --mika-border: #C9C5BD;
+        --mika-border: #D4DADF;
 
-        --mika-text: #25282C;
-        --mika-secondary: #656A70;
-        --mika-muted: #858A90;
+        --mika-text: #17212B;
+        --mika-secondary: #46515C;
+        --mika-muted: #68737D;
 
-        --mika-accent: #5C7F91;
-        --mika-accent-dark: #4F7080;
-        --mika-accent-soft: #DCE5E9;
+        --mika-blue: #1769AA;
+        --mika-blue-dark: #0D4F82;
+        --mika-blue-soft: #E6F0F8;
 
-        --mika-green: #587967;
-        --mika-green-soft: #DDE8E1;
+        --mika-green: #217346;
+        --mika-green-dark: #185C37;
+        --mika-green-soft: #E5F3EA;
 
-        --mika-amber: #947C4F;
-        --mika-amber-soft: #EEE7D8;
+        --mika-amber: #9A6700;
+        --mika-amber-dark: #765000;
+        --mika-amber-soft: #FFF4D6;
 
-        --mika-red: #8B5E5E;
-        --mika-red-soft: #EDE0E0;
+        --mika-red: #B42318;
+        --mika-red-dark: #8E1B12;
+        --mika-red-soft: #FDECEA;
 
-        --mika-purple: #77718E;
+        --mika-purple: #6941C6;
+        --mika-purple-soft: #F0EAFF;
+
+        --mika-cyan: #087E8B;
+        --mika-cyan-soft: #E5F7F8;
     }
+
+
+    /* ========================================================
+       MAIN APP
+       ======================================================== */
 
     .stApp {
         background: var(--mika-bg);
@@ -84,8 +96,14 @@ st.markdown(
     }
 
     [data-testid="stHeader"] {
-        background: rgba(231, 228, 222, 0.96);
+        background: rgba(255, 255, 255, 0.97);
+        border-bottom: 1px solid var(--mika-border);
     }
+
+
+    /* ========================================================
+       SIDEBAR
+       ======================================================== */
 
     [data-testid="stSidebar"] {
         background: var(--mika-sidebar);
@@ -104,6 +122,11 @@ st.markdown(
         color: var(--mika-secondary);
     }
 
+
+    /* ========================================================
+       TYPOGRAPHY
+       ======================================================== */
+
     h1,
     h2,
     h3,
@@ -113,12 +136,12 @@ st.markdown(
     }
 
     h1 {
-        font-weight: 650 !important;
+        font-weight: 700 !important;
     }
 
     h2,
     h3 {
-        font-weight: 600 !important;
+        font-weight: 650 !important;
     }
 
     p,
@@ -131,82 +154,115 @@ st.markdown(
         color: var(--mika-secondary);
     }
 
+
+    /* ========================================================
+       BUTTONS
+       ======================================================== */
+
     .stButton > button,
     .stLinkButton > a {
-        background: var(--mika-card);
+        background: #FFFFFF;
         color: var(--mika-text);
         border: 1px solid var(--mika-border);
         border-radius: 7px;
         min-height: 40px;
-        font-weight: 550;
+        font-weight: 600;
         transition: all 0.15s ease;
-        box-shadow: none;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
     }
 
     .stButton > button:hover,
     .stLinkButton > a:hover {
         background: var(--mika-card-hover);
         color: var(--mika-text);
-        border-color: var(--mika-accent);
+        border-color: var(--mika-blue);
     }
 
     .stButton > button[kind="primary"] {
-        background: var(--mika-accent);
+        background: var(--mika-blue);
         color: #FFFFFF;
-        border-color: var(--mika-accent);
+        border-color: var(--mika-blue);
     }
 
     .stButton > button[kind="primary"]:hover {
-        background: var(--mika-accent-dark);
+        background: var(--mika-blue-dark);
         color: #FFFFFF;
+        border-color: var(--mika-blue-dark);
     }
+
+
+    /* ========================================================
+       SIDEBAR BUTTONS
+       ======================================================== */
 
     [data-testid="stSidebar"] .stButton > button {
         text-align: left;
         justify-content: flex-start;
-        background: rgba(244, 241, 235, 0.58);
+
+        background: #FFFFFF;
         color: var(--mika-text);
+
         border: 1px solid var(--mika-border);
         border-radius: 7px;
+
         margin-bottom: 5px;
         min-height: 38px;
     }
 
     [data-testid="stSidebar"] .stButton > button:hover {
-        background: var(--mika-card);
-        border-color: var(--mika-accent);
-        color: var(--mika-text);
+        background: var(--mika-blue-soft);
+        border-color: var(--mika-blue);
+        color: var(--mika-blue-dark);
     }
 
+
+    /* ========================================================
+       METRICS
+       ======================================================== */
+
     [data-testid="stMetric"] {
-        background: var(--mika-card);
+        background: #FFFFFF;
         border: 1px solid var(--mika-border);
         border-radius: 9px;
         padding: 14px 16px;
-        box-shadow: none;
+
+        box-shadow:
+            0 1px 3px rgba(0, 0, 0, 0.06);
     }
 
     [data-testid="stMetricLabel"] {
         color: var(--mika-secondary) !important;
+        font-weight: 600;
     }
 
     [data-testid="stMetricValue"] {
         color: var(--mika-text) !important;
+        font-weight: 700;
     }
 
     [data-testid="stMetricDelta"] {
         color: var(--mika-secondary) !important;
     }
 
+
+    /* ========================================================
+       DATAFRAMES
+       ======================================================== */
+
     [data-testid="stDataFrame"] {
-        background: var(--mika-card);
+        background: #FFFFFF;
         border: 1px solid var(--mika-border);
         border-radius: 8px;
         overflow: hidden;
     }
 
+
+    /* ========================================================
+       SELECTBOX
+       ======================================================== */
+
     [data-baseweb="select"] > div {
-        background: var(--mika-card);
+        background: #FFFFFF;
         border-color: var(--mika-border);
         color: var(--mika-text);
     }
@@ -215,15 +271,20 @@ st.markdown(
         color: var(--mika-text) !important;
     }
 
+
+    /* ========================================================
+       TEXT INPUTS
+       ======================================================== */
+
     [data-baseweb="textarea"] {
-        background: var(--mika-card);
+        background: #FFFFFF;
         border-color: var(--mika-border);
     }
 
     textarea,
     input {
         color: var(--mika-text) !important;
-        background: var(--mika-card) !important;
+        background: #FFFFFF !important;
     }
 
     textarea::placeholder,
@@ -231,95 +292,270 @@ st.markdown(
         color: var(--mika-muted) !important;
     }
 
+
+    /* ========================================================
+       EXPANDERS
+       ======================================================== */
+
     [data-testid="stExpander"] {
-        background: var(--mika-card);
+        background: #FFFFFF;
         border: 1px solid var(--mika-border);
         border-radius: 8px;
     }
 
     [data-testid="stExpander"] summary {
         color: var(--mika-text);
+        font-weight: 600;
     }
+
+
+    /* ========================================================
+       ALERTS
+       ======================================================== */
 
     [data-testid="stAlert"] {
         border-radius: 8px;
     }
 
+
+    /* ========================================================
+       DIVIDERS
+       ======================================================== */
+
     hr {
         border-color: var(--mika-border);
     }
 
+
+    /* ========================================================
+       MIKA BRAND HEADER
+       ======================================================== */
+
+    .mika-brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+
+        padding: 10px 4px 14px 4px;
+        margin-bottom: 8px;
+    }
+
+    .mika-brand-mark {
+        width: 42px;
+        height: 42px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 9px;
+
+        background: var(--mika-blue);
+        color: #FFFFFF;
+
+        font-size: 19px;
+        font-weight: 800;
+
+        box-shadow:
+            0 2px 5px rgba(23, 105, 170, 0.25);
+    }
+
+    .mika-brand-name {
+        font-size: 1.2rem;
+        font-weight: 800;
+        color: var(--mika-text);
+        line-height: 1.1;
+    }
+
+    .mika-brand-subtitle {
+        font-size: 0.72rem;
+        color: var(--mika-secondary);
+        margin-top: 3px;
+    }
+
+
+    /* ========================================================
+       CARDS
+       ======================================================== */
+
     .mika-card {
-        background: var(--mika-card);
+        background: #FFFFFF;
+
         border: 1px solid var(--mika-border);
         border-radius: 10px;
+
         padding: 20px;
+
         min-height: 190px;
+
         margin-bottom: 10px;
-        box-shadow: 0 1px 2px rgba(40, 40, 40, 0.04);
+
+        box-shadow:
+            0 1px 3px rgba(0, 0, 0, 0.05);
     }
 
     .mika-card.phase1 {
-        border-left: 4px solid var(--mika-green);
+        border-left: 5px solid var(--mika-green);
     }
 
     .mika-card.phase2 {
-        border-left: 4px solid var(--mika-accent);
+        border-left: 5px solid var(--mika-blue);
     }
 
     .mika-card.phase3 {
-        border-left: 4px solid var(--mika-purple);
+        border-left: 5px solid var(--mika-purple);
     }
 
+
+    /* ========================================================
+       STATUS LABELS
+       ======================================================== */
+
     .mika-status-complete {
-        color: var(--mika-green);
+        color: var(--mika-green-dark);
+
         font-size: 0.76rem;
-        font-weight: 700;
+        font-weight: 800;
+
         letter-spacing: 0.08em;
     }
 
     .mika-status-active {
-        color: var(--mika-accent);
+        color: var(--mika-blue-dark);
+
         font-size: 0.76rem;
-        font-weight: 700;
+        font-weight: 800;
+
         letter-spacing: 0.08em;
     }
 
     .mika-status-progress {
-        color: var(--mika-amber);
+        color: var(--mika-amber-dark);
+
         font-size: 0.76rem;
-        font-weight: 700;
+        font-weight: 800;
+
         letter-spacing: 0.08em;
     }
 
+
+    /* ========================================================
+       SECTION BAR
+       ======================================================== */
+
     .mika-section {
-        background: var(--mika-card);
-        border: 1px solid var(--mika-border);
-        border-left: 4px solid var(--mika-accent);
+        background: var(--mika-blue-soft);
+
+        border: 1px solid #BFD5E5;
+        border-left: 5px solid var(--mika-blue);
+
         border-radius: 7px;
+
         padding: 10px 14px;
+
         margin: 12px 0 18px 0;
     }
 
+
+    /* ========================================================
+       SIDEBAR SECTION LABEL
+       ======================================================== */
+
     .sidebar-phase {
-        color: var(--mika-secondary);
+        color: var(--mika-blue-dark);
+
         font-size: 0.72rem;
-        font-weight: 750;
+        font-weight: 800;
+
         letter-spacing: 0.12em;
+
         margin-top: 17px;
         margin-bottom: 7px;
     }
 
+
+    /* ========================================================
+       BADGES
+       ======================================================== */
+
     .badge {
         display: inline-block;
+
         padding: 4px 8px;
+
         border-radius: 5px;
+
         font-size: 0.72rem;
-        font-weight: 650;
+        font-weight: 700;
+
         border: 1px solid var(--mika-border);
-        background: var(--mika-card);
+
+        background: #FFFFFF;
         color: var(--mika-secondary);
     }
+
+
+    /* ========================================================
+       DATABASE STATUS
+       ======================================================== */
+
+    .db-connected {
+        display: inline-block;
+
+        background: var(--mika-green-soft);
+        color: var(--mika-green-dark);
+
+        border: 1px solid #B9DCC5;
+
+        border-radius: 6px;
+
+        padding: 5px 9px;
+
+        font-size: 0.78rem;
+        font-weight: 800;
+    }
+
+    .db-missing {
+        display: inline-block;
+
+        background: var(--mika-red-soft);
+        color: var(--mika-red-dark);
+
+        border: 1px solid #E9B9B4;
+
+        border-radius: 6px;
+
+        padding: 5px 9px;
+
+        font-size: 0.78rem;
+        font-weight: 800;
+    }
+
+
+    /* ========================================================
+       DATABASE ARCHITECTURE
+       ======================================================== */
+
+    .db-path-box {
+        background: #F7F9FA;
+
+        border: 1px solid var(--mika-border);
+        border-radius: 8px;
+
+        padding: 12px 14px;
+
+        font-family: monospace;
+        font-size: 0.85rem;
+
+        color: var(--mika-text);
+
+        overflow-x: auto;
+    }
+
+
+    /* ========================================================
+       HIDE STREAMLIT CHROME
+       ======================================================== */
 
     #MainMenu {
         visibility: hidden;
@@ -329,10 +565,21 @@ st.markdown(
         visibility: hidden;
     }
 
+
+    /* ========================================================
+       MOBILE
+       ======================================================== */
+
     @media (max-width: 800px) {
+
         .mika-card {
             min-height: auto;
         }
+
+        .mika-brand {
+            padding-bottom: 8px;
+        }
+
     }
 
     </style>
@@ -346,6 +593,9 @@ st.markdown(
 # ============================================================
 
 def database_available():
+    """
+    Check whether the actual project SQLite database exists.
+    """
     return DB_PATH.exists() and DB_PATH.is_file()
 
 
@@ -355,13 +605,14 @@ def database_available():
 
 def get_phase3_composer():
     """
-    Load the Phase 3 answer composer safely.
+    Load Phase 3 safely.
 
-    A Phase 3 import problem must not prevent the rest of
-    the dashboard from loading.
+    A Phase 3 import problem must never prevent
+    the rest of the dashboard from loading.
     """
 
     try:
+
         from phase3_answer_composer import compose_answer
 
         return compose_answer, None
@@ -377,7 +628,14 @@ def get_phase3_composer():
 
 @st.cache_resource
 def get_connection():
+    """
+    Open the real project SQLite database.
+
+    The database is read-only from the dashboard perspective.
+    """
+
     if not database_available():
+
         raise FileNotFoundError(
             f"MIKA CI database not found: {DB_PATH}"
         )
@@ -396,31 +654,42 @@ def get_connection():
 
 def refresh_database():
     """
-    READ-ONLY dashboard refresh.
+    Refresh the dashboard's SQLite connection and Streamlit caches.
 
-    Clears Streamlit database/data caches.
-    Does not modify SQLite records or schema.
+    Does NOT modify SQLite records or schema.
     """
 
     try:
+
         connection = get_connection()
         connection.close()
+
     except Exception:
+
         pass
 
     try:
+
         get_connection.clear()
+
     except Exception:
+
         pass
 
     try:
+
         st.cache_data.clear()
+
     except Exception:
+
         pass
 
     try:
+
         st.cache_resource.clear()
+
     except Exception:
+
         pass
 
 
@@ -429,6 +698,10 @@ def refresh_database():
 # ============================================================
 
 def query(sql, params=()):
+    """
+    Execute a query against the real SQLite database.
+    """
+
     connection = get_connection()
 
     cursor = connection.execute(
@@ -440,6 +713,13 @@ def query(sql, params=()):
 
 
 def scalar(sql, params=(), default=0):
+    """
+    Execute a scalar query.
+
+    Missing tables or unavailable database return the
+    supplied default rather than crashing the dashboard.
+    """
+
     try:
 
         connection = get_connection()
@@ -450,6 +730,7 @@ def scalar(sql, params=(), default=0):
         ).fetchone()
 
         if row and row[0] is not None:
+
             return row[0]
 
         return default
@@ -461,18 +742,24 @@ def scalar(sql, params=(), default=0):
 
 def safe_query(sql, params=(), default=None):
     """
-    Query helper for optional dashboard sections.
+    Safe dashboard query.
 
-    Returns default instead of crashing the page.
+    Optional dashboard sections return an empty result
+    instead of terminating the entire Streamlit application.
     """
 
     if default is None:
         default = []
 
     try:
-        return query(sql, params)
+
+        return query(
+            sql,
+            params,
+        )
 
     except Exception:
+
         return default
 
 
@@ -481,6 +768,7 @@ def safe_query(sql, params=(), default=None):
 # ============================================================
 
 def get_latest_run():
+
     rows = safe_query(
         """
         SELECT
@@ -502,9 +790,11 @@ def get_latest_run():
 
 
 def get_current_week():
+
     rows = safe_query(
         """
-        SELECT scan_week
+        SELECT
+            scan_week
         FROM scan_runs
         WHERE status = 'completed'
         ORDER BY run_id DESC
@@ -620,7 +910,10 @@ ACTIVE_CAMPAIGN_COUNT = scalar(
       )
       AND status != 'ended'
     """,
-    (TODAY, TODAY),
+    (
+        TODAY,
+        TODAY,
+    ),
 )
 
 UPCOMING_CAMPAIGN_COUNT = scalar(
@@ -710,36 +1003,60 @@ if "last_refresh" not in st.session_state:
 # ============================================================
 
 def navigate(page):
+
     st.session_state.page = page
+
     st.rerun()
 
 
 # ============================================================
-# SIDEBAR
+# SIDEBAR BRANDING
 # ============================================================
 
-st.sidebar.title("MIKA CI")
+st.sidebar.markdown(
+    """
+    <div class="mika-brand">
+
+        <div class="mika-brand-mark">
+            M
+        </div>
+
+        <div>
+            <div class="mika-brand-name">
+                MIKA CI
+            </div>
+
+            <div class="mika-brand-subtitle">
+                Competitive Intelligence
+            </div>
+        </div>
+
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
 
 st.sidebar.caption(
-    "Competitive Intelligence Command Center"
+    "MIKA / Ideal Appliances"
 )
 
 
-# ------------------------------------------------------------
+# ============================================================
 # HOME
-# ------------------------------------------------------------
+# ============================================================
 
 if st.sidebar.button(
     "🏠 Home",
     use_container_width=True,
     key="nav_home",
 ):
+
     navigate("home")
 
 
-# ------------------------------------------------------------
+# ============================================================
 # PHASE 1
-# ------------------------------------------------------------
+# ============================================================
 
 st.sidebar.markdown(
     '<div class="sidebar-phase">PHASE 1</div>',
@@ -751,19 +1068,22 @@ if st.sidebar.button(
     use_container_width=True,
     key="nav_phase1",
 ):
+
     navigate("phase1")
+
 
 if st.sidebar.button(
     "🔎 Sources / OSINT",
     use_container_width=True,
     key="nav_sources",
 ):
+
     navigate("sources")
 
 
-# ------------------------------------------------------------
+# ============================================================
 # PHASE 2
-# ------------------------------------------------------------
+# ============================================================
 
 st.sidebar.markdown(
     '<div class="sidebar-phase">PHASE 2</div>',
@@ -775,61 +1095,95 @@ if st.sidebar.button(
     use_container_width=True,
     key="nav_social",
 ):
-    st.session_state.phase2_module = "Social Intelligence"
+
+    st.session_state.phase2_module = (
+        "Social Intelligence"
+    )
+
     navigate("phase2")
+
 
 if st.sidebar.button(
     "📢 Campaign Intelligence",
     use_container_width=True,
     key="nav_campaigns",
 ):
-    st.session_state.phase2_module = "Campaign Intelligence"
+
+    st.session_state.phase2_module = (
+        "Campaign Intelligence"
+    )
+
     navigate("phase2")
+
 
 if st.sidebar.button(
     "📦 Product Intelligence",
     use_container_width=True,
     key="nav_products",
 ):
-    st.session_state.phase2_module = "Product Intelligence"
+
+    st.session_state.phase2_module = (
+        "Product Intelligence"
+    )
+
     navigate("phase2")
+
 
 if st.sidebar.button(
     "🚀 Product Launches",
     use_container_width=True,
     key="nav_launches",
 ):
-    st.session_state.phase2_module = "Product Launches"
+
+    st.session_state.phase2_module = (
+        "Product Launches"
+    )
+
     navigate("phase2")
+
 
 if st.sidebar.button(
     "📈 Market Trends",
     use_container_width=True,
     key="nav_trends",
 ):
-    st.session_state.phase2_module = "Market Trends"
+
+    st.session_state.phase2_module = (
+        "Market Trends"
+    )
+
     navigate("phase2")
+
 
 if st.sidebar.button(
     "⚖️ Competitor Comparison",
     use_container_width=True,
     key="nav_comparison",
 ):
-    st.session_state.phase2_module = "Competitor Comparison"
+
+    st.session_state.phase2_module = (
+        "Competitor Comparison"
+    )
+
     navigate("phase2")
+
 
 if st.sidebar.button(
     "🚨 Strategic Alerts",
     use_container_width=True,
     key="nav_alerts",
 ):
-    st.session_state.phase2_module = "Strategic Alerts"
+
+    st.session_state.phase2_module = (
+        "Strategic Alerts"
+    )
+
     navigate("phase2")
 
 
-# ------------------------------------------------------------
+# ============================================================
 # PHASE 3
-# ------------------------------------------------------------
+# ============================================================
 
 st.sidebar.markdown(
     '<div class="sidebar-phase">PHASE 3</div>',
@@ -841,12 +1195,13 @@ if st.sidebar.button(
     use_container_width=True,
     key="nav_phase3",
 ):
+
     navigate("phase3")
 
 
-# ------------------------------------------------------------
+# ============================================================
 # SYSTEM
-# ------------------------------------------------------------
+# ============================================================
 
 st.sidebar.markdown(
     '<div class="sidebar-phase">SYSTEM</div>',
@@ -858,22 +1213,24 @@ if st.sidebar.button(
     use_container_width=True,
     key="nav_reports",
 ):
+
     navigate("reports")
+
 
 if st.sidebar.button(
     "🧩 Schema & Database",
     use_container_width=True,
     key="nav_database",
 ):
+
     navigate("database")
 
 
-st.sidebar.divider()
-
-
-# ------------------------------------------------------------
+# ============================================================
 # REFRESH
-# ------------------------------------------------------------
+# ============================================================
+
+st.sidebar.divider()
 
 if st.sidebar.button(
     "🔄 Refresh Data",
@@ -896,6 +1253,25 @@ if st.session_state.last_refresh > 0:
     )
 
 
+# ============================================================
+# SIDEBAR DATABASE STATUS
+# ============================================================
+
+if database_available():
+
+    st.sidebar.markdown(
+        '<span class="db-connected">● DATABASE CONNECTED</span>',
+        unsafe_allow_html=True,
+    )
+
+else:
+
+    st.sidebar.markdown(
+        '<span class="db-missing">● DATABASE NOT FOUND</span>',
+        unsafe_allow_html=True,
+    )
+
+
 st.sidebar.caption(
     f"Database: {DB_PATH.name}"
 )
@@ -913,13 +1289,27 @@ st.sidebar.caption(
 # MAIN HEADER
 # ============================================================
 
-st.title(
-    "MIKA Competitive Intelligence"
-)
+st.markdown(
+    """
+    <div class="mika-brand">
 
-st.caption(
-    "Live competitive market intelligence for "
-    "MIKA / Ideal Appliances."
+        <div class="mika-brand-mark">
+            M
+        </div>
+
+        <div>
+            <div class="mika-brand-name">
+                MIKA Competitive Intelligence
+            </div>
+
+            <div class="mika-brand-subtitle">
+                Live market intelligence for MIKA / Ideal Appliances
+            </div>
+        </div>
+
+    </div>
+    """,
+    unsafe_allow_html=True,
 )
 
 
@@ -977,6 +1367,7 @@ if st.session_state.page == "home":
         st.markdown(
             """
             <div class="mika-card phase1">
+
                 <h3>Phase 1</h3>
 
                 <div class="mika-status-complete">
@@ -988,6 +1379,7 @@ if st.session_state.page == "home":
                     promotions, products, competitor activity,
                     news, sources and reporting.
                 </p>
+
             </div>
             """,
             unsafe_allow_html=True,
@@ -998,6 +1390,7 @@ if st.session_state.page == "home":
             key="home_phase1",
             use_container_width=True,
         ):
+
             navigate("phase1")
 
 
@@ -1010,6 +1403,7 @@ if st.session_state.page == "home":
         st.markdown(
             """
             <div class="mika-card phase2">
+
                 <h3>Phase 2</h3>
 
                 <div class="mika-status-complete">
@@ -1021,6 +1415,7 @@ if st.session_state.page == "home":
                     market trends, competitor comparison,
                     strategic alerts and social evidence.
                 </p>
+
             </div>
             """,
             unsafe_allow_html=True,
@@ -1031,6 +1426,7 @@ if st.session_state.page == "home":
             key="home_phase2",
             use_container_width=True,
         ):
+
             navigate("phase2")
 
 
@@ -1043,6 +1439,7 @@ if st.session_state.page == "home":
         st.markdown(
             """
             <div class="mika-card phase3">
+
                 <h3>Phase 3</h3>
 
                 <div class="mika-status-active">
@@ -1053,6 +1450,7 @@ if st.session_state.page == "home":
                     Ask MIKA CI questions and retrieve answers
                     directly from validated SQLite evidence.
                 </p>
+
             </div>
             """,
             unsafe_allow_html=True,
@@ -1063,6 +1461,7 @@ if st.session_state.page == "home":
             key="home_phase3",
             use_container_width=True,
         ):
+
             navigate("phase3")
 
 
@@ -1080,24 +1479,28 @@ if st.session_state.page == "home":
     c1, c2, c3, c4 = st.columns(4)
 
     with c1:
+
         st.metric(
             "Competitors",
             COMPETITOR_COUNT,
         )
 
     with c2:
+
         st.metric(
             "Price Observations",
             PRICE_OBSERVATION_COUNT,
         )
 
     with c3:
+
         st.metric(
             "Active Campaigns",
             ACTIVE_CAMPAIGN_COUNT,
         )
 
     with c4:
+
         st.metric(
             "Strategic Alerts",
             STRATEGIC_ALERT_COUNT,
@@ -1107,24 +1510,28 @@ if st.session_state.page == "home":
     c1, c2, c3, c4 = st.columns(4)
 
     with c1:
+
         st.metric(
             "Social Evidence",
             SOCIAL_OBSERVATION_COUNT,
         )
 
     with c2:
+
         st.metric(
             "Market Trends",
             MARKET_TREND_COUNT,
         )
 
     with c3:
+
         st.metric(
             "Comparisons",
             COMPARISON_COUNT,
         )
 
     with c4:
+
         st.metric(
             "Tracked Catalogue",
             CATALOGUE_PRODUCT_COUNT,
@@ -1248,7 +1655,9 @@ elif st.session_state.page == "sources":
         """
         SELECT COUNT(*)
         FROM findings
-        WHERE LOWER(COALESCE(verification_status, '')) = 'verified'
+        WHERE LOWER(
+            COALESCE(verification_status, '')
+        ) = 'verified'
         """
     )
 
@@ -1256,7 +1665,9 @@ elif st.session_state.page == "sources":
         """
         SELECT COUNT(*)
         FROM findings
-        WHERE LOWER(COALESCE(confidence, '')) = 'high'
+        WHERE LOWER(
+            COALESCE(confidence, '')
+        ) = 'high'
         """
     )
 
@@ -1337,11 +1748,22 @@ elif st.session_state.page == "sources":
     source_rows = safe_query(
         """
         SELECT
-            COALESCE(f.source_type, 'Unknown') AS source_type,
+            COALESCE(
+                f.source_type,
+                'Unknown'
+            ) AS source_type,
+
             f.source_url,
+
             COUNT(*) AS findings,
-            COUNT(DISTINCT f.brand) AS brands,
-            MAX(f.observed_date) AS latest_observation,
+
+            COUNT(
+                DISTINCT f.brand
+            ) AS brands,
+
+            MAX(
+                f.observed_date
+            ) AS latest_observation,
 
             SUM(
                 CASE
@@ -1416,12 +1838,17 @@ elif st.session_state.page == "sources":
         "Source Detail"
     )
 
-    source_options = ["Select a source"]
+    source_options = [
+        "Select a source"
+    ]
 
     for row in source_rows:
 
         if row[1] and row[1] not in source_options:
-            source_options.append(row[1])
+
+            source_options.append(
+                row[1]
+            )
 
     selected_source = st.selectbox(
         "Choose a source",
@@ -1465,12 +1892,14 @@ elif st.session_state.page == "sources":
             d1, d2, d3 = st.columns(3)
 
             with d1:
+
                 st.metric(
                     "Findings",
                     len(source_detail),
                 )
 
             with d2:
+
                 st.metric(
                     "Brands",
                     len(
@@ -1545,7 +1974,9 @@ elif st.session_state.page == "sources":
 
                 with st.expander(label):
 
-                    st.write(row[4])
+                    st.write(
+                        row[4]
+                    )
 
                     if row[7]:
 
@@ -1605,7 +2036,6 @@ elif st.session_state.page == "phase1":
 
     st.divider()
 
-
     st.subheader(
         "Phase 1 Overview"
     )
@@ -1613,20 +2043,31 @@ elif st.session_state.page == "phase1":
     c1, c2, c3, c4 = st.columns(4)
 
     with c1:
-        st.metric("Total Findings", TOTAL_FINDINGS)
+        st.metric(
+            "Total Findings",
+            TOTAL_FINDINGS,
+        )
 
     with c2:
-        st.metric("Prices", PRICE_COUNT)
+        st.metric(
+            "Prices",
+            PRICE_COUNT,
+        )
 
     with c3:
-        st.metric("Promotions", PROMOTION_COUNT)
+        st.metric(
+            "Promotions",
+            PROMOTION_COUNT,
+        )
 
     with c4:
-        st.metric("News", NEWS_COUNT)
+        st.metric(
+            "News",
+            NEWS_COUNT,
+        )
 
 
     st.divider()
-
 
     st.subheader(
         "Competitor Activity"
@@ -1673,7 +2114,6 @@ elif st.session_state.page == "phase1":
 
 
     st.divider()
-
 
     st.subheader(
         "Price Intelligence"
@@ -1733,7 +2173,6 @@ elif st.session_state.page == "phase1":
 
 
     st.divider()
-
 
     st.subheader(
         "Promotion Intelligence"
@@ -1796,7 +2235,6 @@ elif st.session_state.page == "phase1":
 
     st.divider()
 
-
     st.subheader(
         "News Intelligence"
     )
@@ -1832,7 +2270,9 @@ elif st.session_state.page == "phase1":
                 f"### {row[1]}"
             )
 
-            st.write(row[3])
+            st.write(
+                row[3]
+            )
 
             st.caption(
                 f"{row[0]} · {row[2]} · {row[5]}"
@@ -1872,7 +2312,6 @@ elif st.session_state.page == "phase2":
     )
 
     st.divider()
-
 
     modules = [
         "Social Intelligence",
@@ -1956,24 +2395,28 @@ elif st.session_state.page == "phase2":
         c1, c2, c3, c4 = st.columns(4)
 
         with c1:
+
             st.metric(
                 "Social Observations",
                 SOCIAL_OBSERVATION_COUNT,
             )
 
         with c2:
+
             st.metric(
                 "Social Findings",
                 social_finding_count,
             )
 
         with c3:
+
             st.metric(
                 "Verified Sources",
                 verified_social_sources,
             )
 
         with c4:
+
             st.metric(
                 "Active Sources",
                 total_social_sources,
@@ -1996,11 +2439,8 @@ elif st.session_state.page == "phase2":
                 verification_status,
                 last_checked,
                 verification_source
-
             FROM social_sources
-
             WHERE active = 1
-
             ORDER BY
                 competitor_name,
                 platform
@@ -2062,16 +2502,12 @@ elif st.session_state.page == "phase2":
                 so.observed_date,
                 so.verification_status,
                 so.confidence
-
             FROM social_observations so
-
             JOIN findings f
                 ON f.finding_id = so.finding_id
-
             ORDER BY
                 so.observed_date DESC,
                 so.observation_id DESC
-
             LIMIT 100
             """
         )
@@ -2194,7 +2630,6 @@ elif st.session_state.page == "phase2":
 
         st.divider()
 
-
         c1, c2, c3 = st.columns(3)
 
         with c1:
@@ -2241,9 +2676,7 @@ elif st.session_state.page == "phase2":
                 confidence,
                 source_url,
                 evidence_text
-
             FROM campaigns
-
             WHERE
                 (
                     start_date IS NOT NULL
@@ -2254,14 +2687,11 @@ elif st.session_state.page == "phase2":
                     )
                     AND status != 'ended'
                 )
-
                 OR
-
                 (
                     start_date > ?
                     AND status = 'upcoming'
                 )
-
             ORDER BY
                 start_date,
                 campaign_name
@@ -2346,7 +2776,6 @@ elif st.session_state.page == "phase2":
 
         st.divider()
 
-
         c1, c2, c3 = st.columns(3)
 
         with c1:
@@ -2386,19 +2815,14 @@ elif st.session_state.page == "phase2":
                 COUNT(DISTINCT po.model) AS models,
                 MIN(po.observed_date) AS first_observed,
                 MAX(po.observed_date) AS last_observed
-
             FROM price_observations po
-
             JOIN findings f
                 ON f.finding_id = po.finding_id
-
             JOIN competitors c
                 ON c.competitor_id = f.competitor_id
-
             GROUP BY
                 c.competitor_name,
                 c.brand_name
-
             ORDER BY
                 observations DESC
             """
@@ -2445,19 +2869,14 @@ elif st.session_state.page == "phase2":
                 po.price_kes,
                 po.promotion_note,
                 po.observed_date
-
             FROM price_observations po
-
             JOIN findings f
                 ON f.finding_id = po.finding_id
-
             JOIN competitors c
                 ON c.competitor_id = f.competitor_id
-
             ORDER BY
                 po.observed_date DESC,
                 po.observation_id DESC
-
             LIMIT 150
             """
         )
@@ -2519,9 +2938,18 @@ elif st.session_state.page == "phase2":
         catalogue_rows = []
 
         catalogue_definitions = [
-            ("Haier", "haier_products"),
-            ("Bruhm", "bruhm_products"),
-            ("K-Elec", "k_elec_products"),
+            (
+                "Haier",
+                "haier_products",
+            ),
+            (
+                "Bruhm",
+                "bruhm_products",
+            ),
+            (
+                "K-Elec",
+                "k_elec_products",
+            ),
         ]
 
         for brand, table_name in catalogue_definitions:
@@ -2612,7 +3040,6 @@ elif st.session_state.page == "phase2":
 
         st.divider()
 
-
         high_confidence = scalar(
             """
             SELECT COUNT(*)
@@ -2627,7 +3054,8 @@ elif st.session_state.page == "phase2":
             """
             SELECT COUNT(*)
             FROM market_trends
-            WHERE signal_type = 'PRICE_CAMPAIGN_CONCURRENCY'
+            WHERE signal_type =
+                'PRICE_CAMPAIGN_CONCURRENCY'
             """
         )
 
@@ -2671,9 +3099,7 @@ elif st.session_state.page == "phase2":
                 end_date,
                 evidence_count,
                 confidence
-
             FROM market_trends
-
             ORDER BY
                 start_date DESC,
                 trend_id DESC
@@ -2741,7 +3167,8 @@ elif st.session_state.page == "phase2":
             row[0]
             for row in safe_query(
                 """
-                SELECT DISTINCT competitor_name
+                SELECT DISTINCT
+                    competitor_name
                 FROM competitor_comparisons
                 ORDER BY competitor_name
                 """
@@ -2751,7 +3178,10 @@ elif st.session_state.page == "phase2":
 
         selected_competitor = st.selectbox(
             "Filter by competitor",
-            ["All competitors"] + competitor_options,
+            [
+                "All competitors"
+            ]
+            + competitor_options,
         )
 
 
@@ -2772,9 +3202,7 @@ elif st.session_state.page == "phase2":
                     evidence_summary,
                     confidence,
                     coverage_status
-
                 FROM competitor_comparisons
-
                 ORDER BY
                     competitor_name,
                     dimension,
@@ -2799,11 +3227,8 @@ elif st.session_state.page == "phase2":
                     evidence_summary,
                     confidence,
                     coverage_status
-
                 FROM competitor_comparisons
-
                 WHERE competitor_name = ?
-
                 ORDER BY
                     dimension,
                     metric_name
@@ -2870,7 +3295,6 @@ elif st.session_state.page == "phase2":
 
         st.divider()
 
-
         high_alerts = scalar(
             """
             SELECT COUNT(*)
@@ -2934,11 +3358,8 @@ elif st.session_state.page == "phase2":
                 confidence,
                 status,
                 created_at
-
             FROM strategic_alerts
-
             WHERE status = 'OPEN'
-
             ORDER BY
                 CASE priority
                     WHEN 'HIGH' THEN 1
@@ -3236,16 +3657,16 @@ elif st.session_state.page == "database":
     )
 
     st.caption(
-        "Live read-only view of the MIKA Competitive Intelligence "
-        "SQLite database and its actual schema."
+        "Live read-only inspection of the actual MIKA Competitive "
+        "Intelligence SQLite project database."
     )
 
     st.divider()
 
 
-    # --------------------------------------------------------
+    # ========================================================
     # DATABASE STATUS
-    # --------------------------------------------------------
+    # ========================================================
 
     st.subheader(
         "Database Status"
@@ -3253,13 +3674,27 @@ elif st.session_state.page == "database":
 
     if not database_available():
 
+        st.markdown(
+            '<span class="db-missing">● DATABASE NOT FOUND</span>',
+            unsafe_allow_html=True,
+        )
+
         st.error(
-            f"Database file not found: {DB_PATH}"
+            f"SQLite database was not found at:"
+        )
+
+        st.markdown(
+            f"""
+            <div class="db-path-box">
+            {DB_PATH}
+            </div>
+            """,
+            unsafe_allow_html=True,
         )
 
         st.info(
-            "The dashboard is looking for the SQLite database "
-            "at the path shown above."
+            "The dashboard expects the actual project database "
+            "inside the project's data folder."
         )
 
     else:
@@ -3278,7 +3713,8 @@ elif st.session_state.page == "database":
 
                 table_rows = db.execute(
                     """
-                    SELECT name
+                    SELECT
+                        name
                     FROM sqlite_master
                     WHERE type = 'table'
                       AND name NOT LIKE 'sqlite_%'
@@ -3292,6 +3728,14 @@ elif st.session_state.page == "database":
                 if integrity
                 else "unknown"
             )
+
+
+            st.markdown(
+                '<span class="db-connected">● DATABASE CONNECTED</span>',
+                unsafe_allow_html=True,
+            )
+
+            st.write("")
 
 
             c1, c2, c3, c4 = st.columns(4)
@@ -3315,9 +3759,21 @@ elif st.session_state.page == "database":
 
             with c3:
 
+                if database_size >= 1024 * 1024:
+
+                    size_text = (
+                        f"{database_size / (1024 * 1024):.2f} MB"
+                    )
+
+                else:
+
+                    size_text = (
+                        f"{database_size / 1024:.1f} KB"
+                    )
+
                 st.metric(
                     "File Size",
-                    f"{database_size / 1024:.1f} KB",
+                    size_text,
                 )
 
 
@@ -3325,12 +3781,23 @@ elif st.session_state.page == "database":
 
                 st.metric(
                     "Integrity",
-                    integrity_status.upper(),
+                    str(
+                        integrity_status
+                    ).upper(),
                 )
 
 
             st.caption(
-                f"Path: {DB_PATH}"
+                "Actual SQLite file:"
+            )
+
+            st.markdown(
+                f"""
+                <div class="db-path-box">
+                {DB_PATH}
+                </div>
+                """,
+                unsafe_allow_html=True,
             )
 
 
@@ -3344,13 +3811,19 @@ elif st.session_state.page == "database":
     st.divider()
 
 
-    # --------------------------------------------------------
+    # ========================================================
     # ACTUAL SCHEMA OVERVIEW
-    # --------------------------------------------------------
+    # ========================================================
 
     st.subheader(
-        "Schema Overview"
+        "Actual SQLite Schema"
     )
+
+    st.caption(
+        "This section reads the schema directly from "
+        "sqlite_master and PRAGMA table_info()."
+    )
+
 
     if database_available():
 
@@ -3362,7 +3835,8 @@ elif st.session_state.page == "database":
 
                 tables = db.execute(
                     """
-                    SELECT name
+                    SELECT
+                        name
                     FROM sqlite_master
                     WHERE type = 'table'
                       AND name NOT LIKE 'sqlite_%'
@@ -3417,16 +3891,28 @@ elif st.session_state.page == "database":
                 f"Could not read database schema: {exc}"
             )
 
+    else:
+
+        st.info(
+            "Schema will appear here when the SQLite database "
+            "is available."
+        )
+
 
     st.divider()
 
 
-    # --------------------------------------------------------
+    # ========================================================
     # TABLE EXPLORER
-    # --------------------------------------------------------
+    # ========================================================
 
     st.subheader(
         "Table Explorer"
+    )
+
+    st.caption(
+        "Select any actual SQLite table to inspect its "
+        "columns and real stored records."
     )
 
 
@@ -3442,7 +3928,8 @@ elif st.session_state.page == "database":
                     row[0]
                     for row in db.execute(
                         """
-                        SELECT name
+                        SELECT
+                            name
                         FROM sqlite_master
                         WHERE type = 'table'
                           AND name NOT LIKE 'sqlite_%'
@@ -3457,6 +3944,7 @@ elif st.session_state.page == "database":
                 selected_table = st.selectbox(
                     "Select a table",
                     table_names,
+                    key="database_table_selector",
                 )
 
 
@@ -3484,6 +3972,8 @@ elif st.session_state.page == "database":
                 )
 
 
+                st.divider()
+
                 st.markdown(
                     "**Table Schema**"
                 )
@@ -3497,7 +3987,10 @@ elif st.session_state.page == "database":
                     column_data.append(
                         {
                             "Column": column[1],
-                            "Type": column[2] or "ANY",
+                            "Type": (
+                                column[2]
+                                or "ANY"
+                            ),
                             "Not Null": (
                                 "YES"
                                 if column[3]
@@ -3517,11 +4010,19 @@ elif st.session_state.page == "database":
                     )
 
 
-                st.dataframe(
-                    column_data,
-                    use_container_width=True,
-                    hide_index=True,
-                )
+                if column_data:
+
+                    st.dataframe(
+                        column_data,
+                        use_container_width=True,
+                        hide_index=True,
+                    )
+
+                else:
+
+                    st.info(
+                        "No columns were returned for this table."
+                    )
 
 
                 st.divider()
@@ -3598,16 +4099,28 @@ elif st.session_state.page == "database":
                 f"Table explorer error: {exc}"
             )
 
+    else:
+
+        st.info(
+            "Table Explorer is unavailable because the "
+            "SQLite database is not present."
+        )
+
 
     st.divider()
 
 
-    # --------------------------------------------------------
+    # ========================================================
     # DATABASE ARCHITECTURE
-    # --------------------------------------------------------
+    # ========================================================
 
     st.subheader(
         "Database Architecture"
+    )
+
+    st.caption(
+        "Generated directly from the actual SQLite database. "
+        "No table names are hard-coded here."
     )
 
 
@@ -3623,7 +4136,8 @@ elif st.session_state.page == "database":
                     row[0]
                     for row in db.execute(
                         """
-                        SELECT name
+                        SELECT
+                            name
                         FROM sqlite_master
                         WHERE type = 'table'
                           AND name NOT LIKE 'sqlite_%'
@@ -3638,29 +4152,37 @@ elif st.session_state.page == "database":
                 architecture_text = (
                     "**MIKA Competitive Intelligence**\n\n"
                     "```text\n"
-                    "SQLite Database\n"
+                    "SQLite Project Database\n"
                     "│\n"
                 )
+
 
                 for index, table_name in enumerate(
                     actual_tables
                 ):
 
                     is_last = (
-                        index == len(actual_tables) - 1
+                        index
+                        == len(actual_tables) - 1
                     )
 
-                    connector = "└──" if is_last else "├──"
+                    connector = (
+                        "└──"
+                        if is_last
+                        else "├──"
+                    )
 
                     architecture_text += (
                         f"{connector} {table_name}\n"
                     )
 
+
                 architecture_text += (
                     "```\n\n"
-                    "The table list above is generated directly "
-                    "from the actual SQLite database."
+                    "The architecture above is generated from "
+                    "the actual SQLite tables currently present."
                 )
+
 
                 st.markdown(
                     architecture_text
@@ -3671,6 +4193,7 @@ elif st.session_state.page == "database":
                 st.info(
                     "No application tables exist in the database."
                 )
+
 
         except Exception as exc:
 
@@ -3689,7 +4212,12 @@ elif st.session_state.page == "database":
     st.divider()
 
 
+    # ========================================================
+    # DATABASE SAFETY NOTICE
+    # ========================================================
+
     st.info(
-        "Dashboard inspection does not modify the database "
-        "schema or database records."
+        "The dashboard opens the project SQLite database in "
+        "read-only inspection mode. Schema & Database does not "
+        "create, delete, rename or modify database records."
     )
