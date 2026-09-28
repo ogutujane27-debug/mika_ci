@@ -1149,11 +1149,11 @@ if LATEST_RUN:
 
 if st.session_state.page == "home":
 
-        st.image(
+    st.image(
         str(BASE_DIR / "assets" / "mika_logo.png"),
         width=150,
     )
-    
+
     st.header(
         "MIKA CI Command Center"
     )
