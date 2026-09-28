@@ -3,8 +3,17 @@ __pycache__/
 .env
 .venv/
 venv/
-*.db
-*.sqlite
 *.log
+
+# Raw collector data
 data/raw/
+
+# Generated reports
 reports/*.md
+
+# Keep historical database backups out of Git
+data/mika_competitive_intel_before_*.db
+
+# Keep the active MIKA CI database in Git
+!data/
+!data/mika_competitive_intel.db
