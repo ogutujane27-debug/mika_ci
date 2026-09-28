@@ -1,8 +1,8 @@
 import sqlite3
 import sys
+import urllib.request
 from datetime import date
 from pathlib import Path
-
 import streamlit as st
 
 
@@ -19,6 +19,40 @@ if str(APP_DIR) not in sys.path:
     sys.path.insert(0, str(APP_DIR))
 
 DB_PATH = DATA_DIR / "mika_competitive_intel.db"
+
+GITHUB_DB_URL = (
+    "https://raw.githubusercontent.com/"
+    "ogutujane27-debug/mika_ci/main/"
+    "data/mika_competitive_intel.db"
+)
+
+
+def ensure_database_from_github(force=False):
+    DATA_DIR.mkdir(parents=True, exist_ok=True)
+
+    if DB_PATH.exists() and DB_PATH.is_file() and not force:
+        return True
+
+    try:
+        urllib.request.urlretrieve(
+            GITHUB_DB_URL,
+            str(DB_PATH)
+        )
+
+        return (
+            DB_PATH.exists()
+            and DB_PATH.is_file()
+            and DB_PATH.stat().st_size > 0
+        )
+
+    except Exception:
+        try:
+            if DB_PATH.exists():
+                DB_PATH.unlink()
+        except Exception:
+            pass
+
+        return False
 
 
 # ============================================================
@@ -500,15 +534,13 @@ st.markdown(
 # ============================================================
 
 def database_available():
-    """
-    Check whether the actual project SQLite database exists.
-    """
-    return DB_PATH.exists() and DB_PATH.is_file()
+    return ensure_database_from_github()
 
 
 # ============================================================
 # PHASE 3 IMPORT
 # ============================================================
+
 
 def get_phase3_composer():
     """
@@ -533,15 +565,9 @@ def get_phase3_composer():
 
 @st.cache_resource
 def get_connection():
-    """
-    Open the real project SQLite database.
-
-    The dashboard only performs read operations.
-    """
-
-    if not database_available():
+    if not ensure_database_from_github():
         raise FileNotFoundError(
-            f"MIKA CI database not found: {DB_PATH}"
+            "The real MIKA CI database could not be loaded from GitHub."
         )
 
     connection = sqlite3.connect(
@@ -551,7 +577,6 @@ def get_connection():
     )
 
     return connection
-
 
 # ============================================================
 # DATABASE REFRESH
