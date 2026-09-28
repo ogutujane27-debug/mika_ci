@@ -15,7 +15,12 @@ DB_PATH = BASE_DIR / "data" / "mika_competitive_intel.db"
 # ============================================================
 
 def get_connection():
-    """Open the MIKA CI SQLite database from the project root."""
+    """
+    Open the MIKA CI SQLite database.
+
+    The database is located relative to the project root,
+    not relative to the current working directory.
+    """
 
     if not DB_PATH.exists():
         raise FileNotFoundError(
@@ -26,29 +31,27 @@ def get_connection():
 
 
 # ============================================================
-# STANDALONE DATABASE CHECK
+# DATABASE CHECK
 # ============================================================
 
-if __name__ == "__main__":
+def check_database():
+    """Check that the database exists and list its tables."""
 
     connection = get_connection()
 
     try:
-        cursor = connection.execute(
+        tables = connection.execute(
             """
             SELECT name
             FROM sqlite_master
             WHERE type = 'table'
             ORDER BY name
             """
-        )
-
-        tables = cursor.fetchall()
+        ).fetchall()
 
         print("=" * 70)
         print("MIKA CI DATABASE CHECK")
         print("=" * 70)
-
         print(f"Database : {DB_PATH}")
         print(f"Exists   : {DB_PATH.exists()}")
         print(f"Tables   : {len(tables)}")
@@ -62,3 +65,13 @@ if __name__ == "__main__":
 
     finally:
         connection.close()
+
+
+# ============================================================
+# IMPORTANT:
+# Only run the check when this file is executed directly.
+# Importing this module must NOT open the database.
+# ============================================================
+
+if __name__ == "__main__":
+    check_database()
