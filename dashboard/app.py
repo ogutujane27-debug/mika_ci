@@ -21,23 +21,6 @@ if str(APP_DIR) not in sys.path:
 DB_PATH = DATA_DIR / "mika_competitive_intel.db"
 
 
-def database_available():
-    return DB_PATH.exists() and DB_PATH.is_file()
-
-
-def get_phase3_composer():
-    """
-    Load Phase 3 only when the user opens Ask MIKA CI.
-
-    This prevents a Phase 3 import problem from preventing
-    the entire dashboard from loading.
-    """
-    try:
-        from phase3_answer_composer import compose_answer
-        return compose_answer, None
-    except Exception as exc:
-        return None, exc
-
 # ============================================================
 # PAGE CONFIG
 # ============================================================
@@ -51,29 +34,25 @@ st.set_page_config(
 
 
 # ============================================================
-# MIKA CI — CLEAN NEUTRAL THEME
+# MIKA CI — SOFT GREY / CREAM THEME
 # ============================================================
 
 st.markdown(
     """
     <style>
 
-    /* ======================================================
-       COLOUR SYSTEM
-       ====================================================== */
-
     :root {
-        --mika-bg: #FFFFFF;
-        --mika-sidebar: #F5F5F3;
+        --mika-bg: #E7E4DE;
+        --mika-sidebar: #D9D6D0;
 
-        --mika-card: #FAFAF8;
-        --mika-card-hover: #F2F2F0;
+        --mika-card: #F4F1EB;
+        --mika-card-hover: #ECE9E3;
 
-        --mika-border: #D8D8D4;
+        --mika-border: #C9C5BD;
 
-        --mika-text: #202124;
-        --mika-secondary: #666666;
-        --mika-muted: #888888;
+        --mika-text: #25282C;
+        --mika-secondary: #656A70;
+        --mika-muted: #858A90;
 
         --mika-accent: #5C7F91;
         --mika-accent-dark: #4F7080;
@@ -91,11 +70,6 @@ st.markdown(
         --mika-purple: #77718E;
     }
 
-
-    /* ======================================================
-       APPLICATION
-       ====================================================== */
-
     .stApp {
         background: var(--mika-bg);
         color: var(--mika-text);
@@ -110,13 +84,8 @@ st.markdown(
     }
 
     [data-testid="stHeader"] {
-        background: rgba(255, 255, 255, 0.96);
+        background: rgba(231, 228, 222, 0.96);
     }
-
-
-    /* ======================================================
-       SIDEBAR
-       ====================================================== */
 
     [data-testid="stSidebar"] {
         background: var(--mika-sidebar);
@@ -134,11 +103,6 @@ st.markdown(
     [data-testid="stSidebar"] .stCaption {
         color: var(--mika-secondary);
     }
-
-
-    /* ======================================================
-       TYPOGRAPHY
-       ====================================================== */
 
     h1,
     h2,
@@ -166,11 +130,6 @@ st.markdown(
     [data-testid="stMarkdownContainer"] p {
         color: var(--mika-secondary);
     }
-
-
-    /* ======================================================
-       BUTTONS
-       ====================================================== */
 
     .stButton > button,
     .stLinkButton > a {
@@ -202,15 +161,10 @@ st.markdown(
         color: #FFFFFF;
     }
 
-
-    /* ======================================================
-       SIDEBAR NAVIGATION
-       ====================================================== */
-
     [data-testid="stSidebar"] .stButton > button {
         text-align: left;
         justify-content: flex-start;
-        background: rgba(255, 255, 255, 0.72);
+        background: rgba(244, 241, 235, 0.58);
         color: var(--mika-text);
         border: 1px solid var(--mika-border);
         border-radius: 7px;
@@ -219,15 +173,10 @@ st.markdown(
     }
 
     [data-testid="stSidebar"] .stButton > button:hover {
-        background: #FFFFFF;
+        background: var(--mika-card);
         border-color: var(--mika-accent);
         color: var(--mika-text);
     }
-
-
-    /* ======================================================
-       METRICS
-       ====================================================== */
 
     [data-testid="stMetric"] {
         background: var(--mika-card);
@@ -249,22 +198,12 @@ st.markdown(
         color: var(--mika-secondary) !important;
     }
 
-
-    /* ======================================================
-       DATAFRAMES
-       ====================================================== */
-
     [data-testid="stDataFrame"] {
         background: var(--mika-card);
         border: 1px solid var(--mika-border);
         border-radius: 8px;
         overflow: hidden;
     }
-
-
-    /* ======================================================
-       SELECTBOX
-       ====================================================== */
 
     [data-baseweb="select"] > div {
         background: var(--mika-card);
@@ -275,11 +214,6 @@ st.markdown(
     [data-baseweb="select"] input {
         color: var(--mika-text) !important;
     }
-
-
-    /* ======================================================
-       TEXT INPUTS
-       ====================================================== */
 
     [data-baseweb="textarea"] {
         background: var(--mika-card);
@@ -297,11 +231,6 @@ st.markdown(
         color: var(--mika-muted) !important;
     }
 
-
-    /* ======================================================
-       EXPANDERS
-       ====================================================== */
-
     [data-testid="stExpander"] {
         background: var(--mika-card);
         border: 1px solid var(--mika-border);
@@ -312,66 +241,13 @@ st.markdown(
         color: var(--mika-text);
     }
 
-
-    /* ======================================================
-       ALERTS
-       ====================================================== */
-
     [data-testid="stAlert"] {
         border-radius: 8px;
     }
 
-
-    /* ======================================================
-       DIVIDERS
-       ====================================================== */
-
     hr {
         border-color: var(--mika-border);
     }
-
-
-    /* ======================================================
-       MIKA HOME BRANDING
-       ====================================================== */
-
-    .mika-home-brand {
-        background: #000000;
-        color: #FFFFFF;
-        border-radius: 18px;
-        padding: 36px 40px;
-        margin: 0 0 28px 0;
-        text-align: left;
-        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
-    }
-
-    .mika-home-brand .brand-name {
-        color: #FFFFFF;
-        font-size: 54px;
-        font-weight: 800;
-        letter-spacing: 8px;
-        line-height: 1;
-        margin: 0;
-    }
-
-    .mika-home-brand .brand-tag {
-        color: #DDDDDD;
-        font-size: 14px;
-        font-weight: 500;
-        letter-spacing: 4px;
-        margin-top: 13px;
-    }
-
-    .mika-home-brand .brand-rule {
-        width: 70px;
-        border-top: 2px solid #FFFFFF;
-        margin: 20px 0 0 0;
-    }
-
-
-    /* ======================================================
-       PHASE CARDS
-       ====================================================== */
 
     .mika-card {
         background: var(--mika-card);
@@ -395,11 +271,6 @@ st.markdown(
         border-left: 4px solid var(--mika-purple);
     }
 
-
-    /* ======================================================
-       STATUS
-       ====================================================== */
-
     .mika-status-complete {
         color: var(--mika-green);
         font-size: 0.76rem;
@@ -421,11 +292,6 @@ st.markdown(
         letter-spacing: 0.08em;
     }
 
-
-    /* ======================================================
-       SECTION BAR
-       ====================================================== */
-
     .mika-section {
         background: var(--mika-card);
         border: 1px solid var(--mika-border);
@@ -435,11 +301,6 @@ st.markdown(
         margin: 12px 0 18px 0;
     }
 
-
-    /* ======================================================
-       SIDEBAR PHASE LABEL
-       ====================================================== */
-
     .sidebar-phase {
         color: var(--mika-secondary);
         font-size: 0.72rem;
@@ -448,11 +309,6 @@ st.markdown(
         margin-top: 17px;
         margin-bottom: 7px;
     }
-
-
-    /* ======================================================
-       BADGES
-       ====================================================== */
 
     .badge {
         display: inline-block;
@@ -465,11 +321,6 @@ st.markdown(
         color: var(--mika-secondary);
     }
 
-
-    /* ======================================================
-       HIDE STREAMLIT CHROME
-       ====================================================== */
-
     #MainMenu {
         visibility: hidden;
     }
@@ -478,29 +329,9 @@ st.markdown(
         visibility: hidden;
     }
 
-
-    /* ======================================================
-       MOBILE
-       ====================================================== */
-
     @media (max-width: 800px) {
-
         .mika-card {
             min-height: auto;
-        }
-
-        .mika-home-brand {
-            padding: 28px 24px;
-        }
-
-        .mika-home-brand .brand-name {
-            font-size: 42px;
-            letter-spacing: 6px;
-        }
-
-        .mika-home-brand .brand-tag {
-            font-size: 11px;
-            letter-spacing: 2.5px;
         }
     }
 
@@ -511,17 +342,41 @@ st.markdown(
 
 
 # ============================================================
-# DATABASE
+# DATABASE AVAILABILITY
+# ============================================================
+
+def database_available():
+    return DB_PATH.exists() and DB_PATH.is_file()
+
+
+# ============================================================
+# PHASE 3 IMPORT
+# ============================================================
+
+def get_phase3_composer():
+    """
+    Load the Phase 3 answer composer safely.
+
+    A Phase 3 import problem must not prevent the rest of
+    the dashboard from loading.
+    """
+
+    try:
+        from phase3_answer_composer import compose_answer
+
+        return compose_answer, None
+
+    except Exception as exc:
+
+        return None, exc
+
+
+# ============================================================
+# DATABASE CONNECTION
 # ============================================================
 
 @st.cache_resource
 def get_connection():
-    """
-    Read-only SQLite connection used by the dashboard.
-
-    The dashboard never writes to the database.
-    """
-
     if not database_available():
         raise FileNotFoundError(
             f"MIKA CI database not found: {DB_PATH}"
@@ -535,79 +390,16 @@ def get_connection():
     return connection
 
 
-def table_exists(table_name):
-    """
-    Check whether a table exists before querying it.
-    """
-
-    if not database_available():
-        return False
-
-    try:
-        connection = get_connection()
-
-        row = connection.execute(
-            """
-            SELECT 1
-            FROM sqlite_master
-            WHERE type = 'table'
-              AND name = ?
-            LIMIT 1
-            """,
-            (table_name,),
-        ).fetchone()
-
-        return row is not None
-
-    except Exception:
-        return False
-
-
-def query(sql, params=()):
-    """
-    Execute a read-only query.
-    """
-
-    connection = get_connection()
-
-    cursor = connection.execute(
-        sql,
-        params,
-    )
-
-    return cursor.fetchall()
-
-
-def scalar(sql, params=(), default=0):
-    """
-    Execute a scalar read-only query.
-
-    If a table/column/query is unavailable, return the supplied
-    default rather than crashing the entire dashboard.
-    """
-
-    try:
-
-        connection = get_connection()
-
-        row = connection.execute(
-            sql,
-            params,
-        ).fetchone()
-
-        return row[0] if row and row[0] is not None else default
-
-    except Exception:
-
-        return default
-
+# ============================================================
+# DATABASE REFRESH
+# ============================================================
 
 def refresh_database():
     """
-    Completely refresh the dashboard's SQLite connection and
-    Streamlit caches.
+    READ-ONLY dashboard refresh.
 
-    No database records or schema are modified.
+    Clears Streamlit database/data caches.
+    Does not modify SQLite records or schema.
     """
 
     try:
@@ -632,60 +424,56 @@ def refresh_database():
         pass
 
 
-def database_status():
-    """
-    Return basic database health information.
-    """
+# ============================================================
+# DATABASE QUERY HELPERS
+# ============================================================
 
-    if not database_available():
+def query(sql, params=()):
+    connection = get_connection()
 
-        return {
-            "exists": False,
-            "size": 0,
-            "integrity": "missing",
-            "tables": [],
-            "error": f"Database not found: {DB_PATH}",
-        }
+    cursor = connection.execute(
+        sql,
+        params,
+    )
 
+    return cursor.fetchall()
+
+
+def scalar(sql, params=(), default=0):
     try:
 
-        with sqlite3.connect(str(DB_PATH)) as connection:
+        connection = get_connection()
 
-            integrity_row = connection.execute(
-                "PRAGMA integrity_check"
-            ).fetchone()
+        row = connection.execute(
+            sql,
+            params,
+        ).fetchone()
 
-            tables = connection.execute(
-                """
-                SELECT name
-                FROM sqlite_master
-                WHERE type = 'table'
-                  AND name NOT LIKE 'sqlite_%'
-                ORDER BY name
-                """
-            ).fetchall()
+        if row and row[0] is not None:
+            return row[0]
 
-        return {
-            "exists": True,
-            "size": DB_PATH.stat().st_size,
-            "integrity": (
-                integrity_row[0]
-                if integrity_row
-                else "unknown"
-            ),
-            "tables": [row[0] for row in tables],
-            "error": None,
-        }
+        return default
 
-    except Exception as exc:
+    except Exception:
 
-        return {
-            "exists": True,
-            "size": DB_PATH.stat().st_size,
-            "integrity": "error",
-            "tables": [],
-            "error": str(exc),
-        }
+        return default
+
+
+def safe_query(sql, params=(), default=None):
+    """
+    Query helper for optional dashboard sections.
+
+    Returns default instead of crashing the page.
+    """
+
+    if default is None:
+        default = []
+
+    try:
+        return query(sql, params)
+
+    except Exception:
+        return default
 
 
 # ============================================================
@@ -693,7 +481,7 @@ def database_status():
 # ============================================================
 
 def get_latest_run():
-    rows = query(
+    rows = safe_query(
         """
         SELECT
             run_id,
@@ -714,7 +502,7 @@ def get_latest_run():
 
 
 def get_current_week():
-    rows = query(
+    rows = safe_query(
         """
         SELECT scan_week
         FROM scan_runs
@@ -735,19 +523,14 @@ TODAY = date.today().isoformat()
 
 if database_available():
 
-    try:
-        WEEK = get_current_week()
-        LATEST_RUN = get_latest_run()
-
-    except Exception:
-
-        WEEK = "N/A"
-        LATEST_RUN = None
+    WEEK = get_current_week()
+    LATEST_RUN = get_latest_run()
 
 else:
 
     WEEK = "N/A"
     LATEST_RUN = None
+
 
 # ============================================================
 # PHASE 1 COUNTS
@@ -1088,15 +871,16 @@ if st.sidebar.button(
 st.sidebar.divider()
 
 
-# ============================================================
-# REFRESH DATA
-# ============================================================
+# ------------------------------------------------------------
+# REFRESH
+# ------------------------------------------------------------
 
 if st.sidebar.button(
     "🔄 Refresh Data",
     use_container_width=True,
     key="refresh_data",
 ):
+
     refresh_database()
 
     st.session_state.last_refresh += 1
@@ -1106,7 +890,10 @@ if st.sidebar.button(
 
 
 if st.session_state.last_refresh > 0:
-    st.sidebar.success("Data refreshed")
+
+    st.sidebar.success(
+        "Data refreshed"
+    )
 
 
 st.sidebar.caption(
@@ -1163,17 +950,6 @@ if LATEST_RUN:
 
 if st.session_state.page == "home":
 
-    st.markdown(
-        """
-        <div class="mika-home-brand">
-            <div class="brand-name">MIKA</div>
-            <div class="brand-tag">IT'S A WONDERFUL WORLD</div>
-            <div class="brand-rule"></div>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
-
     st.header(
         "MIKA CI Command Center"
     )
@@ -1193,7 +969,7 @@ if st.session_state.page == "home":
 
 
     # --------------------------------------------------------
-    # PHASE 1 CARD
+    # PHASE 1
     # --------------------------------------------------------
 
     with phase1:
@@ -1226,7 +1002,7 @@ if st.session_state.page == "home":
 
 
     # --------------------------------------------------------
-    # PHASE 2 CARD
+    # PHASE 2
     # --------------------------------------------------------
 
     with phase2:
@@ -1259,7 +1035,7 @@ if st.session_state.page == "home":
 
 
     # --------------------------------------------------------
-    # PHASE 3 CARD
+    # PHASE 3
     # --------------------------------------------------------
 
     with phase3:
@@ -1366,7 +1142,7 @@ if st.session_state.page == "home":
         "Current Competitive Activity"
     )
 
-    campaign_rows = query(
+    campaign_rows = safe_query(
         """
         SELECT
             competitor_id,
@@ -1518,7 +1294,7 @@ elif st.session_state.page == "sources":
         "Source Types"
     )
 
-    source_type_rows = query(
+    source_type_rows = safe_query(
         """
         SELECT
             COALESCE(source_type, 'Unknown') AS source_type,
@@ -1558,7 +1334,7 @@ elif st.session_state.page == "sources":
         "Source Register"
     )
 
-    source_rows = query(
+    source_rows = safe_query(
         """
         SELECT
             COALESCE(f.source_type, 'Unknown') AS source_type,
@@ -1640,9 +1416,7 @@ elif st.session_state.page == "sources":
         "Source Detail"
     )
 
-    source_options = [
-        "Select a source"
-    ]
+    source_options = ["Select a source"]
 
     for row in source_rows:
 
@@ -1656,7 +1430,7 @@ elif st.session_state.page == "sources":
 
     if selected_source != "Select a source":
 
-        source_detail = query(
+        source_detail = safe_query(
             """
             SELECT
                 f.finding_id,
@@ -1832,10 +1606,6 @@ elif st.session_state.page == "phase1":
     st.divider()
 
 
-    # --------------------------------------------------------
-    # OVERVIEW
-    # --------------------------------------------------------
-
     st.subheader(
         "Phase 1 Overview"
     )
@@ -1843,42 +1613,26 @@ elif st.session_state.page == "phase1":
     c1, c2, c3, c4 = st.columns(4)
 
     with c1:
-        st.metric(
-            "Total Findings",
-            TOTAL_FINDINGS,
-        )
+        st.metric("Total Findings", TOTAL_FINDINGS)
 
     with c2:
-        st.metric(
-            "Prices",
-            PRICE_COUNT,
-        )
+        st.metric("Prices", PRICE_COUNT)
 
     with c3:
-        st.metric(
-            "Promotions",
-            PROMOTION_COUNT,
-        )
+        st.metric("Promotions", PROMOTION_COUNT)
 
     with c4:
-        st.metric(
-            "News",
-            NEWS_COUNT,
-        )
+        st.metric("News", NEWS_COUNT)
 
 
     st.divider()
 
 
-    # --------------------------------------------------------
-    # COMPETITOR ACTIVITY
-    # --------------------------------------------------------
-
     st.subheader(
         "Competitor Activity"
     )
 
-    activity_rows = query(
+    activity_rows = safe_query(
         """
         SELECT
             brand,
@@ -1921,15 +1675,11 @@ elif st.session_state.page == "phase1":
     st.divider()
 
 
-    # --------------------------------------------------------
-    # PRICE INTELLIGENCE
-    # --------------------------------------------------------
-
     st.subheader(
         "Price Intelligence"
     )
 
-    price_rows = query(
+    price_rows = safe_query(
         """
         SELECT
             f.brand,
@@ -1985,15 +1735,11 @@ elif st.session_state.page == "phase1":
     st.divider()
 
 
-    # --------------------------------------------------------
-    # PROMOTION INTELLIGENCE
-    # --------------------------------------------------------
-
     st.subheader(
         "Promotion Intelligence"
     )
 
-    promotion_rows = query(
+    promotion_rows = safe_query(
         """
         SELECT
             f.brand,
@@ -2051,15 +1797,11 @@ elif st.session_state.page == "phase1":
     st.divider()
 
 
-    # --------------------------------------------------------
-    # NEWS INTELLIGENCE
-    # --------------------------------------------------------
-
     st.subheader(
         "News Intelligence"
     )
 
-    news_rows = query(
+    news_rows = safe_query(
         """
         SELECT
             f.brand,
@@ -2090,9 +1832,7 @@ elif st.session_state.page == "phase1":
                 f"### {row[1]}"
             )
 
-            st.write(
-                row[3]
-            )
+            st.write(row[3])
 
             st.caption(
                 f"{row[0]} · {row[2]} · {row[5]}"
@@ -2216,28 +1956,24 @@ elif st.session_state.page == "phase2":
         c1, c2, c3, c4 = st.columns(4)
 
         with c1:
-
             st.metric(
                 "Social Observations",
                 SOCIAL_OBSERVATION_COUNT,
             )
 
         with c2:
-
             st.metric(
                 "Social Findings",
                 social_finding_count,
             )
 
         with c3:
-
             st.metric(
                 "Verified Sources",
                 verified_social_sources,
             )
 
         with c4:
-
             st.metric(
                 "Active Sources",
                 total_social_sources,
@@ -2250,7 +1986,7 @@ elif st.session_state.page == "phase2":
             "Verified Social Source Register"
         )
 
-        source_rows = query(
+        source_rows = safe_query(
             """
             SELECT
                 competitor_name,
@@ -2312,7 +2048,7 @@ elif st.session_state.page == "phase2":
             "Validated Social Observations"
         )
 
-        social_rows = query(
+        social_rows = safe_query(
             """
             SELECT
                 so.observation_id,
@@ -2376,30 +2112,24 @@ elif st.session_state.page == "phase2":
             "Social Breakdown"
         )
 
-        platform_rows = query(
+        platform_rows = safe_query(
             """
             SELECT
                 platform,
                 COUNT(*) AS observations
-
             FROM social_observations
-
             GROUP BY platform
-
             ORDER BY observations DESC
             """
         )
 
-        type_rows = query(
+        type_rows = safe_query(
             """
             SELECT
                 social_type,
                 COUNT(*) AS observations
-
             FROM social_observations
-
             GROUP BY social_type
-
             ORDER BY observations DESC
             """
         )
@@ -2497,7 +2227,7 @@ elif st.session_state.page == "phase2":
             "Active and Upcoming Campaigns"
         )
 
-        rows = query(
+        rows = safe_query(
             """
             SELECT
                 campaign_name,
@@ -2647,7 +2377,7 @@ elif st.session_state.page == "phase2":
             "Observed Price Coverage"
         )
 
-        price_coverage = query(
+        price_coverage = safe_query(
             """
             SELECT
                 c.competitor_name,
@@ -2705,7 +2435,7 @@ elif st.session_state.page == "phase2":
             "Latest Price Observations"
         )
 
-        rows = query(
+        rows = safe_query(
             """
             SELECT
                 c.competitor_name,
@@ -2789,18 +2519,9 @@ elif st.session_state.page == "phase2":
         catalogue_rows = []
 
         catalogue_definitions = [
-            (
-                "Haier",
-                "haier_products",
-            ),
-            (
-                "Bruhm",
-                "bruhm_products",
-            ),
-            (
-                "K-Elec",
-                "k_elec_products",
-            ),
+            ("Haier", "haier_products"),
+            ("Bruhm", "bruhm_products"),
+            ("K-Elec", "k_elec_products"),
         ]
 
         for brand, table_name in catalogue_definitions:
@@ -2813,7 +2534,6 @@ elif st.session_state.page == "phase2":
                         COUNT(*) AS products,
                         MIN(first_seen_date),
                         MAX(last_seen_date)
-
                     FROM "{table_name}"
                     """
                 )
@@ -2830,6 +2550,7 @@ elif st.session_state.page == "phase2":
                     )
 
             except Exception:
+
                 continue
 
 
@@ -2937,7 +2658,7 @@ elif st.session_state.page == "phase2":
 
         st.divider()
 
-        rows = query(
+        rows = safe_query(
             """
             SELECT
                 signal_type,
@@ -3018,7 +2739,7 @@ elif st.session_state.page == "phase2":
 
         competitor_options = [
             row[0]
-            for row in query(
+            for row in safe_query(
                 """
                 SELECT DISTINCT competitor_name
                 FROM competitor_comparisons
@@ -3036,7 +2757,7 @@ elif st.session_state.page == "phase2":
 
         if selected_competitor == "All competitors":
 
-            rows = query(
+            rows = safe_query(
                 """
                 SELECT
                     competitor_name,
@@ -3063,7 +2784,7 @@ elif st.session_state.page == "phase2":
 
         else:
 
-            rows = query(
+            rows = safe_query(
                 """
                 SELECT
                     competitor_name,
@@ -3195,7 +2916,7 @@ elif st.session_state.page == "phase2":
 
         st.divider()
 
-        rows = query(
+        rows = safe_query(
             """
             SELECT
                 alert_type,
@@ -3323,42 +3044,38 @@ elif st.session_state.page == "phase3":
                 "Retrieving verified MIKA CI evidence..."
             ):
 
-                try:
+                compose_answer, composer_error = (
+                    get_phase3_composer()
+                )
 
-    compose_answer, composer_error = get_phase3_composer()
-
-    if composer_error:
-
-        st.error(
-            "The Phase 3 answer engine could not be loaded."
-        )
-
-        st.code(
-            str(composer_error),
-            language="text",
-        )
-
-        result = None
-
-    else:
-
-        result = compose_answer(
-            question.strip()
-        )
-
-except Exception as exc:
-
-    st.error(
-        f"MIKA CI could not answer the question: {exc}"
-    )
-
-    result = None
+                if composer_error:
 
                     st.error(
-                        f"MIKA CI could not answer the question: {exc}"
+                        "The Phase 3 answer engine could not be loaded."
+                    )
+
+                    st.code(
+                        str(composer_error),
+                        language="text",
                     )
 
                     result = None
+
+                else:
+
+                    try:
+
+                        result = compose_answer(
+                            question.strip()
+                        )
+
+                    except Exception as exc:
+
+                        st.error(
+                            f"MIKA CI could not answer the question: {exc}"
+                        )
+
+                        result = None
 
 
             if result:
@@ -3508,335 +3225,471 @@ elif st.session_state.page == "reports":
         )
 
 
-
 # ============================================================
 # SCHEMA & DATABASE
 # ============================================================
 
 elif st.session_state.page == "database":
 
-    st.header("🧩 Schema & Database")
+    st.header(
+        "🧩 Schema & Database"
+    )
 
     st.caption(
-        "Live read-only inspection of the actual MIKA Competitive "
-        "Intelligence SQLite database."
+        "Live read-only view of the MIKA Competitive Intelligence "
+        "SQLite database and its actual schema."
     )
 
     st.divider()
+
 
     # --------------------------------------------------------
     # DATABASE STATUS
     # --------------------------------------------------------
 
-    st.subheader("Database Status")
+    st.subheader(
+        "Database Status"
+    )
 
-    status = database_status()
-
-    if not status["exists"]:
+    if not database_available():
 
         st.error(
-            f"Database file not found:\n\n{DB_PATH}"
+            f"Database file not found: {DB_PATH}"
         )
 
         st.info(
-            "The dashboard code is available, but the SQLite "
-            "database file is not present at the expected path."
+            "The dashboard is looking for the SQLite database "
+            "at the path shown above."
         )
 
     else:
 
-        size_kb = status["size"] / 1024
-
-        c1, c2, c3, c4 = st.columns(4)
-
-        with c1:
-            st.metric(
-                "Database",
-                "CONNECTED",
-            )
-
-        with c2:
-            st.metric(
-                "Tables",
-                len(status["tables"]),
-            )
-
-        with c3:
-            st.metric(
-                "File Size",
-                f"{size_kb:.1f} KB",
-            )
-
-        with c4:
-
-            integrity = str(
-                status["integrity"]
-            ).upper()
-
-            st.metric(
-                "Integrity",
-                integrity,
-            )
-
-        st.caption(
-            f"Database path: {DB_PATH}"
-        )
-
-        if status["error"]:
-
-            st.error(
-                f"Database inspection error: {status['error']}"
-            )
-
-    st.divider()
-
-    # --------------------------------------------------------
-    # ACTUAL DATABASE TABLES
-    # --------------------------------------------------------
-
-    st.subheader("Actual Database Tables")
-
-    if status["tables"]:
-
-        table_rows = []
-
         try:
 
-            with sqlite3.connect(str(DB_PATH)) as db:
+            database_size = DB_PATH.stat().st_size
 
-                for table_name in status["tables"]:
+            with sqlite3.connect(
+                str(DB_PATH)
+            ) as db:
 
-                    try:
+                integrity = db.execute(
+                    "PRAGMA integrity_check"
+                ).fetchone()
 
-                        column_count = db.execute(
-                            f'PRAGMA table_info("{table_name}")'
-                        ).fetchall()
+                table_rows = db.execute(
+                    """
+                    SELECT name
+                    FROM sqlite_master
+                    WHERE type = 'table'
+                      AND name NOT LIKE 'sqlite_%'
+                    ORDER BY name
+                    """
+                ).fetchall()
 
-                        record_count = db.execute(
-                            f'SELECT COUNT(*) FROM "{table_name}"'
-                        ).fetchone()[0]
 
-                        table_rows.append(
-                            {
-                                "Table": table_name,
-                                "Columns": len(column_count),
-                                "Records": record_count,
-                            }
-                        )
-
-                    except Exception as exc:
-
-                        table_rows.append(
-                            {
-                                "Table": table_name,
-                                "Columns": "Error",
-                                "Records": str(exc),
-                            }
-                        )
-
-            st.dataframe(
-                table_rows,
-                use_container_width=True,
-                hide_index=True,
+            integrity_status = (
+                integrity[0]
+                if integrity
+                else "unknown"
             )
+
+
+            c1, c2, c3, c4 = st.columns(4)
+
+
+            with c1:
+
+                st.metric(
+                    "Database",
+                    "CONNECTED",
+                )
+
+
+            with c2:
+
+                st.metric(
+                    "Tables",
+                    len(table_rows),
+                )
+
+
+            with c3:
+
+                st.metric(
+                    "File Size",
+                    f"{database_size / 1024:.1f} KB",
+                )
+
+
+            with c4:
+
+                st.metric(
+                    "Integrity",
+                    integrity_status.upper(),
+                )
+
+
+            st.caption(
+                f"Path: {DB_PATH}"
+            )
+
 
         except Exception as exc:
 
             st.error(
-                f"Could not inspect database tables: {exc}"
+                f"Database inspection failed: {exc}"
             )
 
-    else:
-
-        st.info(
-            "No application tables are available."
-        )
 
     st.divider()
+
+
+    # --------------------------------------------------------
+    # ACTUAL SCHEMA OVERVIEW
+    # --------------------------------------------------------
+
+    st.subheader(
+        "Schema Overview"
+    )
+
+    if database_available():
+
+        try:
+
+            with sqlite3.connect(
+                str(DB_PATH)
+            ) as db:
+
+                tables = db.execute(
+                    """
+                    SELECT name
+                    FROM sqlite_master
+                    WHERE type = 'table'
+                      AND name NOT LIKE 'sqlite_%'
+                    ORDER BY name
+                    """
+                ).fetchall()
+
+
+                schema_overview = []
+
+
+                for table_row in tables:
+
+                    table_name = table_row[0]
+
+                    columns = db.execute(
+                        f'PRAGMA table_info("{table_name}")'
+                    ).fetchall()
+
+                    row_count = db.execute(
+                        f'SELECT COUNT(*) FROM "{table_name}"'
+                    ).fetchone()[0]
+
+
+                    schema_overview.append(
+                        {
+                            "Table": table_name,
+                            "Columns": len(columns),
+                            "Records": row_count,
+                        }
+                    )
+
+
+            if schema_overview:
+
+                st.dataframe(
+                    schema_overview,
+                    use_container_width=True,
+                    hide_index=True,
+                )
+
+            else:
+
+                st.info(
+                    "No application tables were found."
+                )
+
+
+        except Exception as exc:
+
+            st.error(
+                f"Could not read database schema: {exc}"
+            )
+
+
+    st.divider()
+
 
     # --------------------------------------------------------
     # TABLE EXPLORER
     # --------------------------------------------------------
 
-    st.subheader("Table Explorer")
+    st.subheader(
+        "Table Explorer"
+    )
 
-    if status["tables"]:
 
-        selected_table = st.selectbox(
-            "Select a table",
-            status["tables"],
-            key="database_table_selector",
-        )
-
-        st.markdown(
-            f"### `{selected_table}`"
-        )
+    if database_available():
 
         try:
 
-            with sqlite3.connect(str(DB_PATH)) as db:
+            with sqlite3.connect(
+                str(DB_PATH)
+            ) as db:
 
-                columns = db.execute(
-                    f'PRAGMA table_info("{selected_table}")'
-                ).fetchall()
-
-                selected_count = db.execute(
-                    f'SELECT COUNT(*) FROM "{selected_table}"'
-                ).fetchone()[0]
-
-                cursor = db.execute(
-                    f'''
-                    SELECT *
-                    FROM "{selected_table}"
-                    LIMIT 200
-                    '''
-                )
-
-                records = cursor.fetchall()
-
-                column_names = [
-                    description[0]
-                    for description in cursor.description
+                table_names = [
+                    row[0]
+                    for row in db.execute(
+                        """
+                        SELECT name
+                        FROM sqlite_master
+                        WHERE type = 'table'
+                          AND name NOT LIKE 'sqlite_%'
+                        ORDER BY name
+                        """
+                    ).fetchall()
                 ]
 
-            c1, c2 = st.columns(2)
 
-            with c1:
+            if table_names:
+
+                selected_table = st.selectbox(
+                    "Select a table",
+                    table_names,
+                )
+
+
+                st.markdown(
+                    f"### `{selected_table}`"
+                )
+
+
+                with sqlite3.connect(
+                    str(DB_PATH)
+                ) as db:
+
+                    columns = db.execute(
+                        f'PRAGMA table_info("{selected_table}")'
+                    ).fetchall()
+
+                    selected_count = db.execute(
+                        f'SELECT COUNT(*) FROM "{selected_table}"'
+                    ).fetchone()[0]
+
+
                 st.metric(
-                    "Records",
+                    "Records in selected table",
                     selected_count,
                 )
 
-            with c2:
-                st.metric(
-                    "Columns",
-                    len(columns),
+
+                st.markdown(
+                    "**Table Schema**"
                 )
 
-            st.divider()
 
-            # ------------------------------------------------
-            # TABLE SCHEMA
-            # ------------------------------------------------
+                column_data = []
 
-            st.markdown("**Actual Table Schema**")
 
-            schema_rows = []
+                for column in columns:
 
-            for column in columns:
-
-                schema_rows.append(
-                    {
-                        "Column": column[1],
-                        "Type": column[2] or "ANY",
-                        "Not Null": (
-                            "YES"
-                            if column[3]
-                            else "NO"
-                        ),
-                        "Primary Key": (
-                            "YES"
-                            if column[5]
-                            else "NO"
-                        ),
-                        "Default": (
-                            column[4]
-                            if column[4] is not None
-                            else ""
-                        ),
-                    }
-                )
-
-            st.dataframe(
-                schema_rows,
-                use_container_width=True,
-                hide_index=True,
-            )
-
-            st.divider()
-
-            # ------------------------------------------------
-            # ACTUAL RECORDS
-            # ------------------------------------------------
-
-            st.markdown(
-                "**Actual Database Records**"
-            )
-
-            if records:
-
-                record_data = [
-                    dict(
-                        zip(
-                            column_names,
-                            record,
-                        )
+                    column_data.append(
+                        {
+                            "Column": column[1],
+                            "Type": column[2] or "ANY",
+                            "Not Null": (
+                                "YES"
+                                if column[3]
+                                else "NO"
+                            ),
+                            "Primary Key": (
+                                "YES"
+                                if column[5]
+                                else "NO"
+                            ),
+                            "Default": (
+                                column[4]
+                                if column[4] is not None
+                                else ""
+                            ),
+                        }
                     )
-                    for record in records
-                ]
+
 
                 st.dataframe(
-                    record_data,
+                    column_data,
                     use_container_width=True,
                     hide_index=True,
                 )
 
-                if selected_count > 200:
 
-                    st.caption(
-                        f"Showing first 200 records "
-                        f"of {selected_count}."
+                st.divider()
+
+                st.markdown(
+                    "**Actual Database Records**"
+                )
+
+
+                with sqlite3.connect(
+                    str(DB_PATH)
+                ) as db:
+
+                    cursor = db.execute(
+                        f"""
+                        SELECT *
+                        FROM "{selected_table}"
+                        LIMIT 200
+                        """
                     )
+
+                    records = cursor.fetchall()
+
+                    column_names = [
+                        description[0]
+                        for description in cursor.description
+                    ]
+
+
+                if records:
+
+                    record_data = [
+                        dict(
+                            zip(
+                                column_names,
+                                record,
+                            )
+                        )
+                        for record in records
+                    ]
+
+
+                    st.dataframe(
+                        record_data,
+                        use_container_width=True,
+                        hide_index=True,
+                    )
+
+
+                    if selected_count > 200:
+
+                        st.caption(
+                            f"Showing the first 200 records "
+                            f"of {selected_count}."
+                        )
+
+                else:
+
+                    st.info(
+                        "This table currently contains no records."
+                    )
+
 
             else:
 
                 st.info(
-                    "This table currently contains no records."
+                    "No application tables are available."
+                )
+
+
+        except Exception as exc:
+
+            st.error(
+                f"Table explorer error: {exc}"
+            )
+
+
+    st.divider()
+
+
+    # --------------------------------------------------------
+    # DATABASE ARCHITECTURE
+    # --------------------------------------------------------
+
+    st.subheader(
+        "Database Architecture"
+    )
+
+
+    if database_available():
+
+        try:
+
+            with sqlite3.connect(
+                str(DB_PATH)
+            ) as db:
+
+                actual_tables = [
+                    row[0]
+                    for row in db.execute(
+                        """
+                        SELECT name
+                        FROM sqlite_master
+                        WHERE type = 'table'
+                          AND name NOT LIKE 'sqlite_%'
+                        ORDER BY name
+                        """
+                    ).fetchall()
+                ]
+
+
+            if actual_tables:
+
+                architecture_text = (
+                    "**MIKA Competitive Intelligence**\n\n"
+                    "```text\n"
+                    "SQLite Database\n"
+                    "│\n"
+                )
+
+                for index, table_name in enumerate(
+                    actual_tables
+                ):
+
+                    is_last = (
+                        index == len(actual_tables) - 1
+                    )
+
+                    connector = "└──" if is_last else "├──"
+
+                    architecture_text += (
+                        f"{connector} {table_name}\n"
+                    )
+
+                architecture_text += (
+                    "```\n\n"
+                    "The table list above is generated directly "
+                    "from the actual SQLite database."
+                )
+
+                st.markdown(
+                    architecture_text
+                )
+
+            else:
+
+                st.info(
+                    "No application tables exist in the database."
                 )
 
         except Exception as exc:
 
             st.error(
-                f"Could not inspect `{selected_table}`: {exc}"
+                f"Could not build database architecture: {exc}"
             )
 
     else:
 
         st.info(
-            "No database tables are available to explore."
+            "Database architecture will be displayed when "
+            "the SQLite database is available."
         )
+
 
     st.divider()
 
-    # --------------------------------------------------------
-    # ARCHITECTURE
-    # --------------------------------------------------------
-
-    st.subheader("Database Architecture")
-
-    if status["tables"]:
-
-        st.write(
-            "The following tables are actually present in the "
-            "SQLite database:"
-        )
-
-        for table_name in status["tables"]:
-
-            st.markdown(
-                f"- `{table_name}`"
-            )
-
-    else:
-
-        st.info(
-            "Architecture cannot be displayed because the "
-            "database contains no application tables."
-        )
-
-    st.divider()
 
     st.info(
-        "This dashboard is read-only. Schema inspection and "
-        "table exploration do not modify SQLite records."
+        "Dashboard inspection does not modify the database "
+        "schema or database records."
     )
