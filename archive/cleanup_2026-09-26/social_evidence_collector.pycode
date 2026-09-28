@@ -1,0 +1,607 @@
+import re
+import sqlite3
+import uuid
+from datetime import date, timedelta
+from urllib.parse import quote_plus, urlparse
+
+import requests
+from bs4 import BeautifulSoup
+
+
+BASE_DIR = __file__
+DB_PATH = (
+    __import__("pathlib").Path(BASE_DIR).resolve().parent.parent
+    / "data"
+    / "mika_competitive_intel.db"
+)
+
+WINDOW_DAYS = 7
+MAX_RESULTS_PER_QUERY = 10
+
+HEADERS = {
+    "User-Agent": (
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+        "AppleWebKit/537.36 "
+        "Chrome/153.0 Safari/537.36"
+    )
+}
+
+SOCIAL_SOURCES = {
+    "Hotpoint Appliances": {
+        "Facebook": "https://www.facebook.com/hotpointkenya",
+        "Instagram": "https://www.instagram.com/hotpointkenya/",
+    },
+    "Ramtons": {
+        "Facebook": "https://www.facebook.com/MyRamtons/",
+        "Instagram": "https://www.instagram.com/myramtons/",
+    },
+}
+
+SEARCH_QUERIES = {
+    "Hotpoint Appliances": [
+        '"Hotpoint Kenya" promotion',
+        '"Hotpoint Kenya" offer',
+        '"Hotpoint Kenya" sale',
+        '"Hotpoint Kenya" fridge',
+        '"Hotpoint Kenya" cooker',
+        '"Hotpoint Kenya" washing machine',
+    ],
+    "Ramtons": [
+        '"Ramtons Kenya" promotion',
+        '"Ramtons Kenya" offer',
+        '"Ramtons Kenya" sale',
+        '"Ramtons Kenya" fridge',
+        '"Ramtons Kenya" cooker',
+        '"Ramtons Kenya" blender',
+        '"Ramtons Kenya" washing machine',
+    ],
+}
+
+ALLOWED_SOCIAL_DOMAINS = {
+    "facebook.com",
+    "www.facebook.com",
+    "instagram.com",
+    "www.instagram.com",
+}
+
+BLOCKED_DOMAINS = {
+    "bing.com",
+    "www.bing.com",
+    "youtube.com",
+    "www.youtube.com",
+    "whatsapp.com",
+    "www.whatsapp.com",
+    "microsoft.com",
+    "www.microsoft.com",
+}
+
+APPLIANCE_TERMS = {
+    "appliance",
+    "appliances",
+    "fridge",
+    "refrigerator",
+    "freezer",
+    "cooker",
+    "oven",
+    "microwave",
+    "washing machine",
+    "washer",
+    "dryer",
+    "dishwasher",
+    "blender",
+    "mixer",
+    "kettle",
+    "air fryer",
+    "television",
+    "tv",
+    "electronics",
+}
+
+COMMERCIAL_TERMS = {
+    "promotion",
+    "promo",
+    "offer",
+    "discount",
+    "sale",
+    "deal",
+    "price",
+    "buy",
+    "shop",
+    "available",
+    "launch",
+    "new",
+    "campaign",
+    "giveaway",
+}
+
+
+def clean_text(value):
+    return re.sub(r"\s+", " ", value or "").strip()
+
+
+def get_domain(url):
+    return urlparse(url).netloc.lower().split(":")[0]
+
+
+def contains_any(text, terms):
+    text = text.lower()
+    return any(term.lower() in text for term in terms)
+
+
+def competitor_terms(competitor):
+    if competitor == "Hotpoint Appliances":
+        return {"hotpoint", "hotpoint kenya", "hotpointkenya"}
+
+    if competitor == "Ramtons":
+        return {"ramtons", "ramtons kenya", "myramtons"}
+
+    return {competitor.lower()}
+
+
+def is_allowed_social_url(url):
+    domain = get_domain(url)
+
+    if domain in BLOCKED_DOMAINS:
+        return False
+
+    return domain in ALLOWED_SOCIAL_DOMAINS
+
+
+def search_bing(query):
+    url = (
+        "https://www.bing.com/search"
+        f"?q={quote_plus(query)}"
+        "&count=10"
+        "&setlang=en"
+    )
+
+    response = requests.get(
+        url,
+        headers=HEADERS,
+        timeout=20,
+    )
+
+    response.raise_for_status()
+
+    soup = BeautifulSoup(response.text, "html.parser")
+
+    results = []
+
+    for item in soup.select("li.b_algo"):
+        link = item.select_one("h2 a")
+
+        if not link:
+            continue
+
+        title = clean_text(
+            link.get_text(" ", strip=True)
+        )
+
+        url = link.get("href", "").strip()
+
+        if not url:
+            continue
+
+        if not is_allowed_social_url(url):
+            continue
+
+        snippet_node = item.select_one(".b_caption p")
+
+        snippet = clean_text(
+            snippet_node.get_text(" ", strip=True)
+            if snippet_node
+            else ""
+        )
+
+        results.append(
+            {
+                "title": title,
+                "url": url,
+                "snippet": snippet,
+            }
+        )
+
+        if len(results) >= MAX_RESULTS_PER_QUERY:
+            break
+
+    return results
+
+
+def validate_candidate(
+    competitor,
+    title,
+    snippet,
+    url,
+):
+    combined = " ".join(
+        [
+            competitor,
+            title,
+            snippet,
+        ]
+    ).lower()
+
+    identity_ok = contains_any(
+        combined,
+        competitor_terms(competitor),
+    )
+
+    appliance_ok = contains_any(
+        combined,
+        APPLIANCE_TERMS,
+    )
+
+    commercial_ok = contains_any(
+        combined,
+        COMMERCIAL_TERMS,
+    )
+
+    social_url_ok = is_allowed_social_url(url)
+
+    if not identity_ok:
+        return False, "competitor identity missing"
+
+    if not social_url_ok:
+        return False, "not an approved social domain"
+
+    if not appliance_ok:
+        return False, "no appliance/electronics evidence"
+
+    if not commercial_ok:
+        return False, "no commercial/activity evidence"
+
+    return True, "validated"
+
+
+def classify_social_type(title, snippet):
+    text = f"{title} {snippet}".lower()
+
+    if contains_any(
+        text,
+        {
+            "promotion",
+            "promo",
+            "offer",
+            "discount",
+            "sale",
+            "deal",
+            "giveaway",
+        },
+    ):
+        return "promotion"
+
+    if contains_any(
+        text,
+        {
+            "launch",
+            "launched",
+            "new product",
+            "new arrival",
+            "unveiled",
+            "introduced",
+        },
+    ):
+        return "product"
+
+    return "activity"
+
+
+def get_platform(url):
+    domain = get_domain(url)
+
+    if "facebook.com" in domain:
+        return "Facebook"
+
+    if "instagram.com" in domain:
+        return "Instagram"
+
+    return "Web"
+
+
+def generate_finding_id():
+    return f"CI-SOC-{date.today().strftime('%Y%m%d')}-{uuid.uuid4().hex[:8].upper()}"
+
+
+def get_competitor_id(connection, competitor_name):
+    row = connection.execute(
+        """
+        SELECT competitor_id
+        FROM competitors
+        WHERE competitor_name = ?
+        LIMIT 1
+        """,
+        (competitor_name,),
+    ).fetchone()
+
+    if row:
+        return row[0]
+
+    row = connection.execute(
+        """
+        SELECT competitor_id
+        FROM competitors
+        WHERE brand_name = ?
+        LIMIT 1
+        """,
+        (competitor_name,),
+    ).fetchone()
+
+    return row[0] if row else None
+
+
+def finding_already_exists(
+    connection,
+    competitor_id,
+    source_url,
+    evidence_text,
+):
+    row = connection.execute(
+        """
+        SELECT 1
+        FROM findings
+        WHERE competitor_id = ?
+          AND source_url = ?
+          AND evidence_text = ?
+        LIMIT 1
+        """,
+        (
+            competitor_id,
+            source_url,
+            evidence_text,
+        ),
+    ).fetchone()
+
+    return row is not None
+
+
+def write_social_observation(
+    connection,
+    competitor,
+    title,
+    snippet,
+    url,
+):
+    competitor_id = get_competitor_id(
+        connection,
+        competitor,
+    )
+
+    if competitor_id is None:
+        return "SKIPPED: competitor not found"
+
+    evidence = clean_text(
+        f"{title}. {snippet}"
+    )
+
+    if finding_already_exists(
+        connection,
+        competitor_id,
+        url,
+        evidence,
+    ):
+        return "SKIPPED: duplicate"
+
+    finding_id = generate_finding_id()
+    observed_date = date.today().isoformat()
+    scan_week = date.today().strftime("%Y-W%W")
+
+    social_type = classify_social_type(
+        title,
+        snippet,
+    )
+
+    summary = title
+
+    connection.execute(
+        """
+        INSERT INTO findings (
+            finding_id,
+            scan_week,
+            run_id,
+            competitor_id,
+            brand,
+            category,
+            finding_type,
+            summary,
+            source_url,
+            source_type,
+            published_date,
+            observed_date,
+            evidence_text,
+            verification_status,
+            confidence
+        )
+        VALUES (?, ?, NULL, ?, ?, ?, ?, ?, ?, ?, NULL, ?, ?, ?, ?)
+        """,
+        (
+            finding_id,
+            scan_week,
+            competitor_id,
+            competitor,
+            "Home Appliances & Electronics",
+            "social",
+            summary,
+            url,
+            "social media",
+            observed_date,
+            evidence,
+            "VERIFIED",
+            "medium",
+        ),
+    )
+
+    connection.execute(
+        """
+        INSERT INTO social_observations (
+            finding_id,
+            competitor_id,
+            platform,
+            account_name,
+            post_url,
+            post_text,
+            social_type,
+            product_name,
+            model,
+            published_date,
+            observed_date,
+            likes,
+            comments,
+            shares,
+            views,
+            verification_status,
+            confidence,
+            evidence_text
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?, NULL, NULL, NULL, ?, NULL, NULL, NULL, NULL, ?, ?, ?)
+        """,
+        (
+            finding_id,
+            competitor_id,
+            get_platform(url),
+            competitor,
+            url,
+            evidence,
+            social_type,
+            observed_date,
+            "VERIFIED",
+            "medium",
+            evidence,
+        ),
+    )
+
+    connection.commit()
+
+    return f"CREATED: {finding_id}"
+
+
+def ensure_social_table(connection):
+    connection.execute(
+        """
+        CREATE TABLE IF NOT EXISTS social_observations (
+            observation_id INTEGER PRIMARY KEY AUTOINCREMENT,
+            finding_id TEXT NOT NULL,
+            competitor_id INTEGER NOT NULL,
+            platform TEXT NOT NULL,
+            account_name TEXT,
+            post_url TEXT,
+            post_text TEXT,
+            social_type TEXT,
+            product_name TEXT,
+            model TEXT,
+            published_date TEXT,
+            observed_date TEXT NOT NULL,
+            likes INTEGER,
+            comments INTEGER,
+            shares INTEGER,
+            views INTEGER,
+            verification_status TEXT,
+            confidence TEXT,
+            evidence_text TEXT,
+            FOREIGN KEY (finding_id)
+                REFERENCES findings(finding_id),
+            FOREIGN KEY (competitor_id)
+                REFERENCES competitors(competitor_id)
+        )
+        """
+    )
+
+    connection.commit()
+
+
+def main():
+    print("=" * 78)
+    print("MIKA CI - SOCIAL INTELLIGENCE")
+    print("VALIDATED SOCIAL EVIDENCE COLLECTOR")
+    print("=" * 78)
+    print(f"Window : last {WINDOW_DAYS} days")
+    print("Mode   : validated evidence")
+    print("Writes : ENABLED")
+    print()
+
+    connection = sqlite3.connect(DB_PATH)
+
+    try:
+        ensure_social_table(connection)
+
+        created = 0
+        duplicates = 0
+        rejected = 0
+        errors = 0
+
+        for competitor, queries in SEARCH_QUERIES.items():
+
+            print("=" * 78)
+            print(competitor)
+            print("=" * 78)
+
+            for query in queries:
+
+                print()
+                print(f"SEARCH: {query}")
+
+                try:
+                    results = search_bing(query)
+
+                except Exception as exc:
+                    errors += 1
+                    print(f"SEARCH ERROR: {exc}")
+                    continue
+
+                for result in results:
+
+                    title = result["title"]
+                    snippet = result["snippet"]
+                    url = result["url"]
+
+                    valid, reason = validate_candidate(
+                        competitor,
+                        title,
+                        snippet,
+                        url,
+                    )
+
+                    if not valid:
+                        rejected += 1
+                        continue
+
+                    print("-" * 78)
+                    print(f"Competitor : {competitor}")
+                    print(f"Platform   : {get_platform(url)}")
+                    print(f"Type       : {classify_social_type(title, snippet)}")
+                    print(f"Title      : {title}")
+                    print(f"URL        : {url}")
+                    print(f"Evidence   : {snippet or title}")
+
+                    result_status = write_social_observation(
+                        connection,
+                        competitor,
+                        title,
+                        snippet,
+                        url,
+                    )
+
+                    print(f"Database   : {result_status}")
+
+                    if result_status.startswith("CREATED"):
+                        created += 1
+                    elif "duplicate" in result_status.lower():
+                        duplicates += 1
+
+        print()
+        print("=" * 78)
+        print("SOCIAL EVIDENCE COLLECTION SUMMARY")
+        print("=" * 78)
+        print(f"Created       : {created}")
+        print(f"Duplicates    : {duplicates}")
+        print(f"Rejected      : {rejected}")
+        print(f"Search errors : {errors}")
+        print()
+        print("Collection complete.")
+
+    finally:
+        connection.close()
+
+
+if __name__ == "__main__":
+    main()
+
