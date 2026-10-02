@@ -253,6 +253,28 @@ def build_report(connection):
     )
 
     lines.append("")
+    news_rows = connection.execute(
+        """
+        SELECT f.brand, n.news_type, f.published_date, n.headline,
+               f.confidence, f.source_url
+        FROM findings f
+        JOIN news_observations n ON n.finding_id = f.finding_id
+        WHERE f.finding_type = 'news'
+        ORDER BY f.observed_date DESC, f.published_date DESC
+        LIMIT 10
+        """
+    ).fetchall()
+
+    lines.append("MARKET NEWS (latest 10, any week)")
+    lines.append("-" * 78)
+    if not news_rows:
+        lines.append("No news findings stored.")
+    for row in news_rows:
+        lines.append(f"  - {row[0]} | {row[1]} | published {row[2]} | confidence {row[4]}")
+        lines.append(f"    {row[3]}")
+        lines.append(f"    {row[5]}")
+    lines.append("")
+
     lines.append("DATA QUALITY / SCOPE")
     lines.append("-" * 78)
     lines.append(

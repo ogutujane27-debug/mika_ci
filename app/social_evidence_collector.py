@@ -306,6 +306,241 @@ def classify_social_type(text):
     return "activity"
 
 
+def classify_social_product_focus(text):
+    """
+    Identify a product/category focus from social evidence.
+
+    Conservative by design:
+    - returns a CI category only when the post text contains
+      a recognizable product/category signal
+    - returns None when the evidence is too generic
+    """
+    text_lower = clean_text(text).lower()
+
+    category_terms = {
+        "Refrigeration": [
+            "fridge",
+            "refrigerator",
+            "freezer",
+            "double door",
+            "side by side",
+            "chest freezer",
+            "upright freezer",
+        ],
+        "Laundry": [
+            "washing machine",
+            "washer",
+            "dryer",
+            "twin tub",
+            "front load",
+            "top load",
+        ],
+        "Cooking": [
+            "cooker",
+            "oven",
+            "gas cooker",
+            "gas stove",
+            "electric cooker",
+            "microwave",
+            "pressure cooker",
+            "air fryer",
+            "hot plate",
+        ],
+        "Small Kitchen Appliances": [
+            "blender",
+            "kettle",
+            "toaster",
+            "sandwich maker",
+            "coffee maker",
+            "juicer",
+            "food processor",
+            "mixer",
+        ],
+        "TV & Audio": [
+            "television",
+            "tv",
+            "smart tv",
+            "qled",
+            "oled",
+            "soundbar",
+            "speaker",
+            "home theatre",
+        ],
+        "Air & Climate": [
+            "air conditioner",
+            "air conditioning",
+            "ac unit",
+            "fan",
+            "air cooler",
+        ],
+        "Water": [
+            "water heater",
+            "water dispenser",
+            "water purifier",
+        ],
+        "Home Care & Power": [
+            "vacuum cleaner",
+            "iron",
+            "generator",
+            "power backup",
+            "inverter",
+        ],
+        "Cookware": [
+            "cookware",
+            "frying pan",
+            "saucepan",
+            "pot set",
+        ],
+    }
+
+    for category, terms in category_terms.items():
+        if any(term in text_lower for term in terms):
+            return category
+
+    return None
+
+
+def extract_social_model(text):
+    """
+    Extract a model/identifier only when the surrounding text
+    explicitly identifies it as a model or SKU.
+
+    This avoids treating promo codes, prices, dates, phone numbers,
+    percentages or ordinary words followed by numbers as models.
+    """
+    text = clean_text(text)
+
+    if not text:
+        return None
+
+    patterns = [
+        r"(?i)\bmodel(?:\s*(?:no|number|#))?\s*[:\-]?\s*([A-Z0-9][A-Z0-9./_-]{2,30})\b",
+        r"(?i)\bsku\s*[:\-]?\s*([A-Z0-9][A-Z0-9./_-]{2,30})\b",
+        r"(?i)\bproduct\s+(?:code|number)\s*[:\-]?\s*([A-Z0-9][A-Z0-9./_-]{2,30})\b",
+    ]
+
+    for pattern in patterns:
+        match = re.search(pattern, text)
+
+        if not match:
+            continue
+
+        value = clean_text(match.group(1))
+
+        if not value:
+            continue
+
+        if not re.search(r"[A-Z]", value, re.I):
+            continue
+
+        if not re.search(r"\d", value):
+            continue
+
+        return value
+
+    return None
+
+
+
+def extract_social_product_name(text, product_focus=None):
+    """
+    Extract a conservative product phrase only when the text
+    contains an explicit recognized product term.
+
+    Generic words such as 'Friday', 'today', campaign names,
+    promotional codes and other surrounding text are not treated
+    as product names.
+    """
+    text = clean_text(text)
+
+    if not text or not product_focus:
+        return None
+
+    product_terms = [
+        "side by side refrigerator",
+        "double door refrigerator",
+        "refrigerator",
+        "fridge",
+        "chest freezer",
+        "upright freezer",
+        "freezer",
+        "washing machine",
+        "washer",
+        "dryer",
+        "twin tub",
+        "gas cooker",
+        "electric cooker",
+        "cooker",
+        "oven",
+        "gas stove",
+        "stove",
+        "microwave",
+        "pressure cooker",
+        "air fryer",
+        "hot plate",
+        "blender",
+        "kettle",
+        "toaster",
+        "sandwich maker",
+        "coffee maker",
+        "juicer",
+        "food processor",
+        "mixer",
+        "smart tv",
+        "television",
+        "tv",
+        "soundbar",
+        "speaker",
+        "air conditioner",
+        "fan",
+        "water heater",
+        "water dispenser",
+        "water purifier",
+        "vacuum cleaner",
+        "iron",
+        "generator",
+        "inverter",
+    ]
+
+    text_lower = text.lower()
+
+    matches = []
+
+    for term in product_terms:
+        position = text_lower.find(term)
+
+        if position >= 0:
+            matches.append((position, term))
+
+    if not matches:
+        return None
+
+    position, term = min(matches, key=lambda item: item[0])
+
+    start = max(0, position - 45)
+    prefix = text[start:position].strip(" -??:,.()")
+
+    # Keep only the final short descriptive phrase before the
+    # product term. This prevents promotional sentences from
+    # becoming product names.
+    words = prefix.split()
+
+    if len(words) > 6:
+        words = words[-6:]
+
+    candidate = " ".join(words + [text[position:position + len(term)]])
+
+    candidate = clean_text(candidate).strip(" -??:,.()")
+
+    if len(candidate) < 3 or len(candidate) > 100:
+        return term
+
+    return candidate
+
+
+
+
+
 def truncate_text(text, length=1000):
     text = clean_text(text)
 
@@ -705,6 +940,19 @@ def normalize_socialapis_post(
             f"{account_name}"
         )
 
+    product_focus = classify_social_product_focus(
+        post_text
+    )
+
+    product_name = extract_social_product_name(
+        post_text,
+        product_focus,
+    )
+
+    model = extract_social_model(
+        post_text
+    )
+
     return {
         "competitor": competitor_name,
         "platform": platform,
@@ -715,8 +963,8 @@ def normalize_socialapis_post(
         "social_type": classify_social_type(
             post_text
         ),
-        "product_name": None,
-        "model": None,
+        "product_name": product_name,
+        "model": model,
         "published_date": published_date,
         "likes": likes,
         "comments": comments,
