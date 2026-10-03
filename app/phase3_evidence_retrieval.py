@@ -17,6 +17,35 @@ def rows_to_dicts(rows) -> list[dict[str, Any]]:
     return [dict(row) for row in rows]
 
 
+def get_campaigns(conn) -> list[dict[str, Any]]:
+    rows = conn.execute(
+        """
+        SELECT
+            campaign_id,
+            competitor_id,
+            campaign_name,
+            campaign_type,
+            category,
+            offer_value,
+            start_date,
+            end_date,
+            status,
+            source_url,
+            evidence_text,
+            verification_status,
+            confidence,
+            observed_date
+        FROM campaigns
+        ORDER BY
+            COALESCE(observed_date, start_date, end_date, '0000-00-00') DESC,
+            competitor_id,
+            campaign_id
+        """
+    ).fetchall()
+
+    return rows_to_dicts(rows)
+
+
 def get_active_campaigns(conn) -> list[dict[str, Any]]:
     rows = conn.execute(
         """

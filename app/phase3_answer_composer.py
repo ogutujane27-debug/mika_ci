@@ -38,6 +38,7 @@ from dataclasses import dataclass
 from phase3_question_router import route_question
 from phase3_evidence_retrieval import (
     connect,
+    get_campaigns,
     get_active_campaigns,
     get_upcoming_campaigns,
     get_price_movements,
@@ -248,10 +249,22 @@ def matches_filter(row, route, scope):
             row.get("competitor_name") or ""
         ).strip().lower()
 
-        return (
-            row_competitor_name
-            == route.competitor.strip().lower()
+        requested_competitor = (
+            route.competitor.strip().lower()
         )
+
+        if row_competitor_name == requested_competitor:
+            return True
+
+        # Known database naming variant:
+        # "Hotpoint Appliances" represents the tracked Hotpoint brand.
+        if (
+            requested_competitor == "hotpoint"
+            and row_competitor_name == "hotpoint appliances"
+        ):
+            return True
+
+        return False
 
     # ---------------------------------------------------------
     # Brand scope
@@ -310,7 +323,7 @@ def compose_campaign_answer(
         if matches_filter(row, route, scope)
     ]
 
-    label = "upcoming" if upcoming else "active"
+    label = "upcoming" if upcoming else ""
 
     if not filtered:
         requested_scope = route.competitor or route.brand
@@ -359,10 +372,17 @@ def compose_campaign_answer(
 
         lines.append(line)
 
+    campaign_label = (
+        f"{label} campaign"
+        if label
+        else f"campaign"
+    )
+    if len(filtered) != 1:
+        campaign_label += "s"
+
     answer = (
         f"The current evidence set contains {len(filtered)} "
-        f"{label} campaign"
-        f"{'s' if len(filtered) != 1 else ''}:\n"
+        f"{campaign_label}:\n"
         + "\n".join(
             f"- {line}"
             for line in lines
@@ -1221,8 +1241,17 @@ def compose_answer(question: str) -> Answer:
         )
 
         # -----------------------------------------------------
-        # Active campaigns
+        # Campaigns / promotions
         # -----------------------------------------------------
+
+        if route.intent == "CAMPAIGNS":
+            return compose_campaign_answer(
+                question,
+                route,
+                get_campaigns(conn),
+                scope,
+                upcoming=False,
+            )
 
         if route.intent == "CAMPAIGNS_ACTIVE":
             return compose_campaign_answer(

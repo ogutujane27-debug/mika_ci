@@ -1,8 +1,10 @@
 import sqlite3
 import sys
+import json
 import urllib.request
 from datetime import date
 from pathlib import Path
+import pandas as pd
 import streamlit as st
 
 
@@ -1051,6 +1053,42 @@ if st.sidebar.button(
 
 
 # ============================================================
+# MIKA POSITION
+# ============================================================
+
+if st.sidebar.button(
+    "MIKA Position",
+    use_container_width=True,
+    key="nav_mika_position",
+):
+    navigate("mika_position")
+
+
+# ============================================================
+# MARKET ACTIVITY
+# ============================================================
+
+if st.sidebar.button(
+    "Market Activity",
+    use_container_width=True,
+    key="nav_market_activity",
+):
+    navigate("market_activity")
+
+
+# ============================================================
+# STRATEGY & INSIGHTS
+# ============================================================
+
+if st.sidebar.button(
+    "Strategy & Insights",
+    use_container_width=True,
+    key="nav_strategy_insights",
+):
+    navigate("strategy_insights")
+
+
+# ============================================================
 # SYSTEM
 # ============================================================
 
@@ -1299,6 +1337,156 @@ if st.session_state.page == "home":
             use_container_width=True,
         ):
             navigate("phase3")
+
+
+    st.divider()
+
+
+    # --------------------------------------------------------
+    # DASHBOARD MODULES
+    # --------------------------------------------------------
+
+    st.subheader(
+        "CI Dashboard Modules"
+    )
+
+    module1, module2, module3 = st.columns(3)
+
+    with module1:
+
+        st.markdown(
+            """
+            <div class="mika-card">
+
+                <h3>Market Activity</h3>
+
+                <div class="mika-status-complete">
+                    STATUS: READY
+                </div>
+
+                <p>
+                    Current market activity across pricing,
+                    promotions, products, social, news and
+                    competitive signals.
+                </p>
+
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+        if st.button(
+            "Open Market Activity",
+            key="home_market_activity",
+            use_container_width=True,
+        ):
+            navigate("market_activity")
+
+
+    with module2:
+
+        st.markdown(
+            """
+            <div class="mika-card">
+
+                <h3>Strategy & Insights</h3>
+
+                <div class="mika-status-active">
+                    STATUS: READY
+                </div>
+
+                <p>
+                    Threats, opportunities, competitive
+                    movements and strategic recommendations.
+                </p>
+
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+        if st.button(
+            "Open Strategy & Insights",
+            key="home_strategy_insights",
+            use_container_width=True,
+        ):
+            navigate("strategy_insights")
+
+
+    with module3:
+
+        st.markdown(
+            """
+            <div class="mika-card">
+
+                <h3>Ask MIKA</h3>
+
+                <div class="mika-status-active">
+                    STATUS: ACTIVE
+                </div>
+
+                <p>
+                    Ask questions and retrieve answers from
+                    validated MIKA CI evidence.
+                </p>
+
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+        if st.button(
+            "Ask MIKA",
+            key="home_ask_mika",
+            use_container_width=True,
+        ):
+            navigate("phase3")
+
+
+    st.divider()
+
+
+    # --------------------------------------------------------
+    # MIKA POSITION MODULE
+    # --------------------------------------------------------
+
+    st.subheader(
+        "MIKA Position"
+    )
+
+    position_col1, position_col2 = st.columns(2)
+
+    with position_col1:
+
+        st.markdown(
+            """
+            <div class="mika-card">
+
+                <h3>MIKA Position</h3>
+
+                <div class="mika-status-complete">
+                    STATUS: COMPLETED
+                </div>
+
+                <p>
+                    MIKA catalogue coverage, competitor
+                    positioning, product gaps, price positioning
+                    and validated model comparison.
+                </p>
+
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+    with position_col2:
+
+        if st.button(
+            "Open MIKA Position",
+            key="home_mika_position",
+            use_container_width=True,
+        ):
+            navigate("mika_position")
 
 
     st.divider()
@@ -1840,6 +2028,1060 @@ elif st.session_state.page == "sources":
 # ============================================================
 # PHASE 1
 # ============================================================
+
+# ============================================================
+# MARKET ACTIVITY
+# ============================================================
+
+elif st.session_state.page == "market_activity":
+
+    st.header(
+        "Market Activity"
+    )
+
+    st.success(
+        "STATUS: READY"
+    )
+
+    st.caption(
+        f"Current reporting week: {WEEK}"
+    )
+
+    st.caption(
+        "Integrated view of observed competitive market activity "
+        "from the MIKA CI evidence database."
+    )
+
+    st.divider()
+
+    # --------------------------------------------------------
+    # ACTIVITY SNAPSHOT
+    # --------------------------------------------------------
+
+    st.subheader(
+        "Market Activity Snapshot"
+    )
+
+    activity_findings = scalar(
+        """
+        SELECT COUNT(*)
+        FROM findings
+        WHERE scan_week = ?
+        """,
+        (WEEK,),
+        0,
+    )
+
+    activity_prices = scalar(
+        """
+        SELECT COUNT(*)
+        FROM price_observations
+        WHERE observed_date IS NOT NULL
+          AND observed_date >= (
+              SELECT MIN(observed_date)
+              FROM price_observations
+              WHERE observed_date IS NOT NULL
+          )
+        """,
+        default=0,
+    )
+
+    activity_campaigns = scalar(
+        """
+        SELECT COUNT(*)
+        FROM campaigns
+        """,
+        default=0,
+    )
+
+    activity_social = scalar(
+        """
+        SELECT COUNT(*)
+        FROM social_observations
+        """,
+        default=0,
+    )
+
+    c1, c2, c3, c4 = st.columns(4)
+
+    with c1:
+        st.metric(
+            "Current Findings",
+            activity_findings,
+        )
+
+    with c2:
+        st.metric(
+            "Price Observations",
+            activity_prices,
+        )
+
+    with c3:
+        st.metric(
+            "Campaigns",
+            activity_campaigns,
+        )
+
+    with c4:
+        st.metric(
+            "Social Observations",
+            activity_social,
+        )
+
+    st.divider()
+
+    # --------------------------------------------------------
+    # COMPETITIVE ACTIVITY
+    # --------------------------------------------------------
+
+    st.subheader(
+        "Competitive Activity"
+    )
+
+    activity_rows = safe_query(
+        """
+        SELECT
+            COALESCE(brand, 'Unknown') AS brand,
+            COALESCE(finding_type, 'Unknown') AS finding_type,
+            COUNT(*) AS total
+        FROM findings
+        WHERE scan_week = ?
+        GROUP BY
+            brand,
+            finding_type
+        ORDER BY
+            total DESC,
+            brand
+        LIMIT 100
+        """,
+        (WEEK,),
+    )
+
+    if activity_rows:
+
+        st.dataframe(
+            [
+                {
+                    "Competitor": row[0],
+                    "Activity": row[1],
+                    "Findings": row[2],
+                }
+                for row in activity_rows
+            ],
+            use_container_width=True,
+            hide_index=True,
+        )
+
+    else:
+
+        st.info(
+            "No current-week competitive activity is available."
+        )
+
+    st.divider()
+
+    # --------------------------------------------------------
+    # PRICING ACTIVITY
+    # --------------------------------------------------------
+
+    st.subheader(
+        "Pricing Activity"
+    )
+
+    price_rows = safe_query(
+        """
+        SELECT
+            f.brand,
+            po.product_name,
+            po.model,
+            po.price_kes,
+            po.promotion_note,
+            po.observed_date,
+            f.source_url
+        FROM price_observations po
+        LEFT JOIN findings f
+            ON f.finding_id = po.finding_id
+        ORDER BY
+            po.observed_date DESC
+        LIMIT 50
+        """,
+    )
+
+    if price_rows:
+
+        st.dataframe(
+            [
+                {
+                    "Competitor": row[0],
+                    "Product": row[1],
+                    "Model": row[2],
+                    "Price (KSh)": row[3],
+                    "Promotion": row[4],
+                    "Observed": row[5],
+                    "Source": row[6],
+                }
+                for row in price_rows
+            ],
+            use_container_width=True,
+            hide_index=True,
+        )
+
+    else:
+
+        st.info(
+            "No price observations available."
+        )
+
+    st.divider()
+
+    # --------------------------------------------------------
+    # PROMOTIONS
+    # --------------------------------------------------------
+
+    st.subheader(
+        "Promotion Activity"
+    )
+
+    promotion_rows = safe_query(
+        """
+        SELECT
+            f.brand,
+            po.promotion_type,
+            po.offer_value,
+            po.start_date,
+            po.end_date,
+            po.target_segment,
+            f.source_url,
+            f.observed_date
+        FROM promotion_observations po
+        LEFT JOIN findings f
+            ON f.finding_id = po.finding_id
+        ORDER BY
+            f.observed_date DESC
+        LIMIT 50
+        """,
+    )
+
+    if promotion_rows:
+
+        st.dataframe(
+            [
+                {
+                    "Competitor": row[0],
+                    "Promotion": row[1],
+                    "Offer": row[2],
+                    "Start": row[3],
+                    "End": row[4],
+                    "Target": row[5],
+                    "Source": row[6],
+                    "Observed": row[7],
+                }
+                for row in promotion_rows
+            ],
+            use_container_width=True,
+            hide_index=True,
+        )
+
+    else:
+
+        st.info(
+            "No promotion observations available."
+        )
+
+    st.divider()
+
+    # --------------------------------------------------------
+    # SOCIAL ACTIVITY
+    # --------------------------------------------------------
+
+    st.subheader(
+        "Social Activity"
+    )
+
+    social_rows = safe_query(
+        """
+        SELECT
+            competitor_id,
+            platform,
+            account_name,
+            social_type,
+            product_name,
+            published_date,
+            likes,
+            comments,
+            shares,
+            post_url
+        FROM social_observations
+        ORDER BY
+            published_date DESC,
+            id DESC
+        LIMIT 50
+        """,
+    )
+
+    if social_rows:
+
+        st.dataframe(
+            [
+                {
+                    "Competitor ID": row[0],
+                    "Platform": row[1],
+                    "Account": row[2],
+                    "Type": row[3],
+                    "Product": row[4],
+                    "Published": row[5],
+                    "Likes": row[6],
+                    "Comments": row[7],
+                    "Shares": row[8],
+                    "Source": row[9],
+                }
+                for row in social_rows
+            ],
+            use_container_width=True,
+            hide_index=True,
+        )
+
+    else:
+
+        st.info(
+            "No social observations available."
+        )
+
+    st.divider()
+
+    # --------------------------------------------------------
+    # NEWS ACTIVITY
+    # --------------------------------------------------------
+
+    st.subheader(
+        "News Activity"
+    )
+
+    news_rows = safe_query(
+        """
+        SELECT
+            f.brand,
+            no.headline,
+            no.news_type,
+            f.summary,
+            f.source_url,
+            f.published_date
+        FROM news_observations no
+        LEFT JOIN findings f
+            ON f.finding_id = no.finding_id
+        ORDER BY
+            COALESCE(f.published_date, f.observed_date) DESC
+        LIMIT 50
+        """,
+    )
+
+    if news_rows:
+
+        for row in news_rows:
+
+            st.markdown(
+                f"### {row[1]}"
+            )
+
+            st.write(
+                row[3] or ""
+            )
+
+            st.caption(
+                f"{row[0] or 'Unknown'} ? "
+                f"{row[2] or 'News'} ? "
+                f"{row[5] or ''}"
+            )
+
+            if row[4]:
+                st.link_button(
+                    "Open source",
+                    row[4],
+                )
+
+    else:
+
+        st.info(
+            "No verified news observations are available."
+        )
+
+    st.divider()
+
+    # --------------------------------------------------------
+    # MARKET TRENDS
+    # --------------------------------------------------------
+
+    st.subheader(
+        "Market Trend Signals"
+    )
+
+    trend_rows = safe_query(
+        """
+        SELECT *
+        FROM market_trends
+        ORDER BY rowid DESC
+        LIMIT 50
+        """,
+    )
+
+    if trend_rows:
+
+        columns = [
+            description[0]
+            for description in get_connection().execute(
+                "PRAGMA table_info(market_trends)"
+            ).fetchall()
+        ]
+
+        if len(columns) == len(trend_rows[0]):
+
+            st.dataframe(
+                [
+                    dict(zip(columns, row))
+                    for row in trend_rows
+                ],
+                use_container_width=True,
+                hide_index=True,
+            )
+
+        else:
+
+            st.info(
+                "Market trend records are available but "
+                "their schema could not be rendered."
+            )
+
+    else:
+
+        st.info(
+            "No market trend signals are available."
+        )
+
+
+
+
+elif st.session_state.page == "strategy_insights":
+
+    st.header("Strategy & Insights")
+    st.success("STATUS: READY")
+
+    st.caption(
+        "Evidence-based strategic interpretation from the "
+        "validated MIKA CI analysis layer."
+    )
+
+    ci_path = (
+        REPORTS_DIR
+        / "ci_analysis"
+        / "ci_analysis_preview.json"
+    )
+
+    if not ci_path.exists():
+
+        st.error(
+            "CI Analysis output is not available."
+        )
+
+    else:
+
+        try:
+            ci_data = json.loads(
+                ci_path.read_text(
+                    encoding="utf-8"
+                )
+            )
+        except Exception as exc:
+
+            st.error(
+                f"Unable to read CI Analysis output: {exc}"
+            )
+            ci_data = None
+
+        if ci_data:
+
+            st.subheader("Intelligence Source Counts")
+
+            counts = ci_data.get(
+                "source_counts",
+                {}
+            )
+
+            c1, c2, c3, c4 = st.columns(4)
+
+            with c1:
+                st.metric(
+                    "Price Movements",
+                    counts.get(
+                        "price_movements",
+                        0
+                    )
+                )
+
+            with c2:
+                st.metric(
+                    "Verified Campaigns",
+                    counts.get(
+                        "verified_campaigns",
+                        0
+                    )
+                )
+
+            with c3:
+                st.metric(
+                    "Market Trends",
+                    counts.get(
+                        "market_trend_signals",
+                        0
+                    )
+                )
+
+            with c4:
+                st.metric(
+                    "Gap Candidates",
+                    counts.get(
+                        "validated_product_gap_candidates",
+                        0
+                    )
+                )
+
+            st.divider()
+
+            st.subheader("What Happened")
+
+            for item in ci_data.get(
+                "what_happened",
+                []
+            ):
+                st.markdown(
+                    f"- {item}"
+                )
+
+            st.divider()
+
+            st.subheader("What Changed")
+
+            for item in ci_data.get(
+                "what_changed",
+                []
+            ):
+                st.markdown(
+                    f"- {item}"
+                )
+
+            st.divider()
+
+            st.subheader("Why It Matters")
+
+            for item in ci_data.get(
+                "why_it_matters",
+                []
+            ):
+                st.info(item)
+
+            st.divider()
+
+            st.subheader("Threats")
+
+            for item in ci_data.get(
+                "threats",
+                []
+            ):
+
+                with st.container(border=True):
+
+                    st.markdown(
+                        f"**{item.get('threat', '')}**"
+                    )
+
+                    st.write(
+                        item.get(
+                            "detail",
+                            ""
+                        )
+                    )
+
+                    st.caption(
+                        "Basis: "
+                        + str(
+                            item.get(
+                                "basis",
+                                ""
+                            )
+                        )
+                        + " | Confidence: "
+                        + str(
+                            item.get(
+                                "confidence",
+                                ""
+                            )
+                        )
+                    )
+
+            st.divider()
+
+            st.subheader("Opportunities")
+
+            for item in ci_data.get(
+                "opportunities",
+                []
+            ):
+
+                with st.container(border=True):
+
+                    st.markdown(
+                        f"**{item.get('opportunity', '')}**"
+                    )
+
+                    st.write(
+                        item.get(
+                            "detail",
+                            ""
+                        )
+                    )
+
+                    st.caption(
+                        "Basis: "
+                        + str(
+                            item.get(
+                                "basis",
+                                ""
+                            )
+                        )
+                    )
+
+            st.divider()
+
+            st.subheader(
+                "Top Competitive Offers"
+            )
+
+            for offer in ci_data.get(
+                "top_competitive_offers",
+                []
+            ):
+
+                with st.container(border=True):
+
+                    st.markdown(
+                        f"### {offer.get('campaign', '')}"
+                    )
+
+                    st.write(
+                        f"Competitor: "
+                        f"{offer.get('competitor', '')}"
+                    )
+
+                    st.write(
+                        f"Category: "
+                        f"{offer.get('category', '')}"
+                    )
+
+                    st.write(
+                        f"Offer: "
+                        f"{offer.get('offer', '')}"
+                    )
+
+                    st.write(
+                        f"Status: "
+                        f"{offer.get('status', '')}"
+                    )
+
+                    if offer.get("source_url"):
+
+                        st.link_button(
+                            "Open Evidence Source",
+                            offer["source_url"]
+                        )
+
+            st.divider()
+
+            st.subheader(
+                "MIKA Product-Gap Candidates"
+            )
+
+            st.caption(
+                "Validation candidates only ? "
+                "not confirmed market gaps."
+            )
+
+            gaps = ci_data.get(
+                "product_gaps",
+                []
+            )
+
+            if gaps:
+
+                st.dataframe(
+                    gaps,
+                    use_container_width=True,
+                    hide_index=True
+                )
+
+            else:
+
+                st.info(
+                    "No product-gap candidates available."
+                )
+
+            st.divider()
+
+            st.subheader(
+                "Strategic Recommendations"
+            )
+
+            for index, action in enumerate(
+                ci_data.get(
+                    "recommended_actions",
+                    []
+                ),
+                start=1
+            ):
+
+                with st.container(border=True):
+
+                    st.markdown(
+                        f"**{index}. "
+                        f"{action.get('action', '')}**"
+                    )
+
+                    st.write(
+                        action.get(
+                            "reason",
+                            ""
+                        )
+                    )
+
+                    st.caption(
+                        "Evidence: "
+                        + str(
+                            action.get(
+                                "evidence",
+                                ""
+                            )
+                        )
+                    )
+
+
+elif st.session_state.page == "mika_position":
+    st.header("MIKA Position")
+    st.caption(
+        "Catalogue position, competitive coverage, product gaps, "
+        "price positioning and model comparison."
+    )
+
+    PROJECT_ROOT = Path(__file__).resolve().parent.parent
+
+    POSITION_DIR = (
+        PROJECT_ROOT
+        / "reports"
+        / "mika_catalogue_preview"
+        / "mika_position"
+    )
+
+    st.code(
+        f"DEBUG PROJECT_ROOT: {PROJECT_ROOT}\n"
+        f"DEBUG POSITION_DIR: {POSITION_DIR}\n"
+        f"DEBUG POSITION_EXISTS: {POSITION_DIR.exists()}\n"
+        f"DEBUG CATEGORY_EXISTS: {(POSITION_DIR / 'category_coverage.csv').exists()}\n"
+        f"DEBUG COMPARISON_EXISTS: {(POSITION_DIR / 'comparison_summary.csv').exists()}"
+    )
+
+    def mika_position_csv(relative_path):
+        path = POSITION_DIR / relative_path
+
+        if not path.exists():
+            st.error(f"MIKA Position file not found: {path}")
+            return None
+
+        try:
+            return pd.read_csv(path)
+        except Exception as exc:
+            st.error(
+                f"MIKA Position could not read:\n"
+                f"{path}\n\n"
+                f"Error: {type(exc).__name__}: {exc}"
+            )
+            return None
+
+    def mika_position_count(relative_path):
+        df = mika_position_csv(relative_path)
+        if df is None:
+            return 0
+        return len(df)
+
+    st.info(
+        "MIKA Position is based on the completed catalogue analysis. "
+        "Product-gap rows are validation candidates and must not be "
+        "treated as confirmed market gaps."
+    )
+
+    # --------------------------------------------------------
+    # POSITION SNAPSHOT
+    # --------------------------------------------------------
+
+    st.subheader("Position Snapshot")
+
+    category_df = mika_position_csv("category_coverage.csv")
+    subcategory_df = mika_position_csv("subcategory_coverage.csv")
+    comparison_df = mika_position_csv("comparison_summary.csv")
+    mika_category_df = mika_position_csv(
+        "mika_category_position.csv"
+    )
+    gap_df = mika_position_csv(
+        "model_comparison/potential_product_gaps.csv"
+    )
+
+    mika_catalogue = 0
+    competitor_catalogue = 0
+    shared_types = 0
+    gap_candidates = len(gap_df) if gap_df is not None else 0
+    category_count = 0
+    subcategory_count = len(subcategory_df) if subcategory_df is not None else 0
+    bruhm_catalogue = 0
+    haier_catalogue = 0
+    total_catalogue = 0
+
+    if comparison_df is not None:
+        for _, row in comparison_df.iterrows():
+            metric = str(row.get("metric", "")).strip().lower()
+            value = pd.to_numeric(
+                row.get("value"),
+                errors="coerce"
+            )
+
+            if pd.isna(value):
+                continue
+
+            if metric == "mika_products":
+                mika_catalogue = int(value)
+
+            elif metric == "bruhm_products":
+                bruhm_catalogue = int(value)
+
+            elif metric == "haier_products":
+                haier_catalogue = int(value)
+
+            elif metric == "total_products":
+                total_catalogue = int(value)
+
+            elif metric == "categories":
+                category_count = int(value)
+
+    competitor_catalogue = (
+        bruhm_catalogue + haier_catalogue
+    )
+
+    if mika_category_df is not None:
+        shared_types = int(
+            (
+                mika_category_df["position"]
+                .astype(str)
+                .str.upper()
+                == "SHARED"
+            ).sum()
+        )
+
+    snapshot1, snapshot2, snapshot3, snapshot4 = st.columns(4)
+
+    with snapshot1:
+        st.metric(
+            "MIKA Products",
+            mika_catalogue
+        )
+
+    with snapshot2:
+        st.metric(
+            "Competitor Products",
+            competitor_catalogue
+        )
+
+    with snapshot3:
+        st.metric(
+            "Categories",
+            category_count
+        )
+
+    with snapshot4:
+        st.metric(
+            "Gap Candidates",
+            gap_candidates
+        )
+
+    st.caption(
+        f"{subcategory_count} subcategories | "
+        f"{shared_types} categories shared with tracked competitors"
+    )
+
+    # --------------------------------------------------------
+    # CATEGORY POSITION
+    # --------------------------------------------------------
+
+    st.subheader("Category Position")
+
+    if category_df is not None:
+        st.dataframe(
+            category_df,
+            use_container_width=True,
+            hide_index=True,
+        )
+    else:
+        st.warning("Category coverage file unavailable.")
+
+    if mika_category_df is not None:
+        with st.expander("MIKA Category Position"):
+            st.dataframe(
+                mika_category_df,
+                use_container_width=True,
+                hide_index=True,
+            )
+
+    # --------------------------------------------------------
+    # SUBCATEGORY POSITION
+    # --------------------------------------------------------
+
+    st.subheader("Subcategory Position")
+
+    sub_tabs = st.tabs(
+        [
+            "MIKA Position",
+            "Shared",
+            "MIKA Only",
+            "Competitor Only",
+        ]
+    )
+
+    sub_files = [
+        "mika_subcategory_position.csv",
+        "shared_subcategories.csv",
+        "mika_only_subcategories.csv",
+        "competitor_only_subcategories.csv",
+    ]
+
+    for tab, filename in zip(sub_tabs, sub_files):
+        with tab:
+            df = mika_position_csv(filename)
+
+            if df is not None:
+                st.dataframe(
+                    df,
+                    use_container_width=True,
+                    hide_index=True,
+                )
+            else:
+                st.info("No data available.")
+
+    # --------------------------------------------------------
+    # PRODUCT GAP ANALYSIS
+    # --------------------------------------------------------
+
+    st.subheader("Product Gap Analysis")
+
+    st.warning(
+        "These are potential product-gap candidates identified from "
+        "catalogue coverage. They require validation before any gap "
+        "claim is made."
+    )
+
+    gap_tabs = st.tabs(
+        [
+            "Potential Gaps",
+            "Competitor Only",
+            "Category Gap Summary",
+            "Breadth Differences",
+        ]
+    )
+
+    gap_files = [
+        "model_comparison/potential_product_gaps.csv",
+        "product_gap_analysis/competitor_only_product_types.csv",
+        "product_gap_analysis/category_gap_summary.csv",
+        "product_gap_analysis/shared_where_competitor_breadth_higher.csv",
+    ]
+
+    for tab, filename in zip(gap_tabs, gap_files):
+        with tab:
+            df = mika_position_csv(filename)
+
+            if df is not None:
+                st.dataframe(
+                    df,
+                    use_container_width=True,
+                    hide_index=True,
+                )
+            else:
+                st.info("No data available.")
+
+    # --------------------------------------------------------
+    # PRICE POSITIONING
+    # --------------------------------------------------------
+
+    st.subheader("Price Positioning")
+
+    price_tabs = st.tabs(
+        [
+            "Price Positioning",
+            "Price Evidence",
+            "Manual Review",
+        ]
+    )
+
+    price_files = [
+        "price_positioning/price_positioning_preview.csv",
+        "price_positioning/price_evidence_preview.csv",
+        "price_positioning/price_manual_review.csv",
+    ]
+
+    for tab, filename in zip(price_tabs, price_files):
+        with tab:
+            df = mika_position_csv(filename)
+
+            if df is not None:
+                st.dataframe(
+                    df,
+                    use_container_width=True,
+                    hide_index=True,
+                )
+            else:
+                st.info("No data available.")
+
+    # --------------------------------------------------------
+    # MODEL COMPARISON
+    # --------------------------------------------------------
+
+    st.subheader("Model Comparison")
+
+    model_tabs = st.tabs(
+        [
+            "Comparable Types",
+            "Match Validation",
+            "Identifier Limitations",
+        ]
+    )
+
+    model_files = [
+        "model_comparison/comparable_product_types.csv",
+        "model_comparison/match_validation_report.csv",
+        "model_comparison/identifier_limitations.csv",
+    ]
+
+    for tab, filename in zip(model_tabs, model_files):
+        with tab:
+            df = mika_position_csv(filename)
+
+            if df is not None:
+                st.dataframe(
+                    df,
+                    use_container_width=True,
+                    hide_index=True,
+                )
+            else:
+                st.info("No data available.")
+
+    st.caption(
+        "Read-only dashboard view of the completed MIKA Position "
+        "analysis. Source files remain unchanged."
+    )
+
 
 elif st.session_state.page == "phase1":
 
@@ -3257,41 +4499,25 @@ elif st.session_state.page == "phase3":
         else:
 
             with st.spinner(
-                "Retrieving verified MIKA CI evidence..."
+                "Researching MIKA CI and external market evidence..."
             ):
 
-                compose_answer, composer_error = (
-                    get_phase3_composer()
-                )
+                try:
+                    from answer_engine import answer_question
 
-                if composer_error:
-
-                    st.error(
-                        "The Phase 3 answer engine could not be loaded."
+                    result = answer_question(
+                        question.strip(),
+                        external_limit=8,
+                        fetch_pages=True,
                     )
 
-                    st.code(
-                        str(composer_error),
-                        language="text",
+                except Exception as exc:
+
+                    st.error(
+                        f"MIKA CI could not answer the question: {exc}"
                     )
 
                     result = None
-
-                else:
-
-                    try:
-
-                        result = compose_answer(
-                            question.strip()
-                        )
-
-                    except Exception as exc:
-
-                        st.error(
-                            f"MIKA CI could not answer the question: {exc}"
-                        )
-
-                        result = None
 
             if result:
 
@@ -3302,24 +4528,60 @@ elif st.session_state.page == "phase3":
                 )
 
                 st.write(
-                    result.answer
+                    result.get(
+                        "answer",
+                        "No answer was returned.",
+                    )
                 )
 
                 st.divider()
 
                 st.subheader(
-                    "Evidence"
+                    "Research Mode"
                 )
 
-                if result.evidence:
+                mode_col, intent_col, confidence_col = st.columns(3)
+
+                with mode_col:
+                    st.caption(
+                        f"Mode: {result.get('mode', 'UNKNOWN')}"
+                    )
+
+                with intent_col:
+                    st.caption(
+                        f"Intent: {result.get('intent', 'UNKNOWN')}"
+                    )
+
+                with confidence_col:
+                    st.caption(
+                        f"Confidence: {result.get('confidence', 'LOW')}"
+                    )
+
+                internal = result.get(
+                    "internal",
+                    {},
+                )
+
+                external = result.get(
+                    "external",
+                    [],
+                )
+
+                if internal.get("evidence"):
+
+                    st.divider()
+
+                    st.subheader(
+                        "MIKA CI Evidence"
+                    )
 
                     for index, evidence in enumerate(
-                        result.evidence,
+                        internal["evidence"],
                         start=1,
                     ):
 
                         with st.expander(
-                            f"Evidence {index}"
+                            f"Internal Evidence {index}"
                         ):
 
                             if isinstance(
@@ -3339,13 +4601,62 @@ elif st.session_state.page == "phase3":
                                     evidence
                                 )
 
-                else:
+                if external:
 
-                    st.info(
-                        "No supporting evidence was returned."
+                    st.divider()
+
+                    st.subheader(
+                        "External Research"
                     )
 
-                if result.limitations:
+                    for index, source in enumerate(
+                        external,
+                        start=1,
+                    ):
+
+                        with st.expander(
+                            f"External Source {index}: "
+                            f"{source.get('title', 'Untitled source')}"
+                        ):
+
+                            st.markdown(
+                                f"**Source:** {source.get('source_domain', 'Unknown')}"
+                            )
+
+                            if source.get("published_date"):
+                                st.markdown(
+                                    f"**Published:** {source['published_date']}"
+                                )
+
+                            if source.get("kenya_relevance"):
+                                st.markdown(
+                                    f"**Kenya relevance:** "
+                                    f"{source['kenya_relevance']}"
+                                )
+
+                            if source.get("confidence"):
+                                st.markdown(
+                                    f"**Confidence:** "
+                                    f"{source['confidence']}"
+                                )
+
+                            if source.get("evidence"):
+                                st.markdown(
+                                    f"**Evidence:** "
+                                    f"{source['evidence']}"
+                                )
+
+                            if source.get("url"):
+                                st.markdown(
+                                    f"**URL:** {source['url']}"
+                                )
+
+                limitations = result.get(
+                    "limitations",
+                    [],
+                )
+
+                if limitations:
 
                     st.divider()
 
@@ -3353,28 +4664,11 @@ elif st.session_state.page == "phase3":
                         "Limitations"
                     )
 
-                    for limitation in result.limitations:
+                    for limitation in limitations:
 
                         st.markdown(
                             f"- {limitation}"
                         )
-
-                st.divider()
-
-                c1, c2 = st.columns(2)
-
-                with c1:
-
-                    st.caption(
-                        f"Intent: {result.intent}"
-                    )
-
-                with c2:
-
-                    st.caption(
-                        f"Confidence: {result.confidence}"
-                    )
-
 
 # ============================================================
 # REPORTS
@@ -3959,3 +5253,4 @@ elif st.session_state.page == "database":
         "read-only inspection. Schema & Database does not "
         "create, delete, rename or modify database records."
     )
+
